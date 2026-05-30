@@ -12,10 +12,7 @@ class UserMainScreen extends StatefulWidget {
 class _UserMainScreenState extends State<UserMainScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _views = [
-    const HomeScreen(),
-    const MyBookingsScreen(),
-  ];
+  final List<Widget> _views = [const HomeScreen(), const MyBookingsScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +23,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, -5),
             ),
@@ -45,10 +42,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
           items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
               icon: Icon(Icons.list_alt),
               label: 'My Bookings',

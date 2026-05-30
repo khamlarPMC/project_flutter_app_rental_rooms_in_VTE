@@ -100,6 +100,9 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
     try {
       final XFile? pickedImage = await _picker.pickImage(
         source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
       );
       if (pickedImage != null) {
         setState(() {
@@ -581,7 +584,8 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
         ),
         const SizedBox(height: 6),
         DropdownButtonFormField<String>(
-          value: (_gender != null && AppGenders.options.contains(_gender))
+          initialValue:
+              (_gender != null && AppGenders.options.contains(_gender))
               ? _gender
               : null,
           hint: Text(

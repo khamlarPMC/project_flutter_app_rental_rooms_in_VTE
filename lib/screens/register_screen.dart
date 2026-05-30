@@ -12,11 +12,12 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _villageController = TextEditingController();
@@ -90,7 +91,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Full Name Field
                   TextFormField(
                     controller: _nameController,
-                    validator: (value) => value == null || value.isEmpty ? 'Please enter your name' : null,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter your name'
+                        : null,
                     decoration: InputDecoration(
                       hintText: 'Full Name',
                       prefixIcon: const Icon(Icons.person_outline),
@@ -111,7 +114,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Email Field
                   TextFormField(
                     controller: _emailController,
-                    validator: (value) => value == null || !value.contains('@') ? 'Please enter a valid email' : null,
+                    validator: (value) => value == null || !value.contains('@')
+                        ? 'Please enter a valid email'
+                        : null,
                     decoration: InputDecoration(
                       hintText: 'Email address',
                       prefixIcon: const Icon(Icons.email_outlined),
@@ -131,7 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 16),
                   // Role Selection
                   DropdownButtonFormField<String>(
-                    value: _selectedRole,
+                    initialValue: _selectedRole,
                     decoration: InputDecoration(
                       hintText: 'Select Role',
                       prefixIcon: const Icon(Icons.badge_outlined),
@@ -173,7 +178,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
                     ),
                     keyboardType: TextInputType.phone,
                   ),
@@ -190,14 +198,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
                     ),
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16),
                   // Gender Field
                   DropdownButtonFormField<String>(
-                    value: _selectedGender,
+                    initialValue: _selectedGender,
                     decoration: InputDecoration(
                       hintText: 'Gender',
                       prefixIcon: const Icon(Icons.person_outline),
@@ -207,7 +218,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
                     ),
                     items: ['Male', 'Female', 'Other'].map((String value) {
                       return DropdownMenuItem<String>(
@@ -224,7 +238,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Address Details',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF333333)),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF333333),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   // Village Field
@@ -239,7 +257,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -255,7 +276,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -271,14 +295,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   // Password Field
                   TextFormField(
                     controller: _passwordController,
-                    validator: (value) => value == null || value.length < 8 ? 'Password must be at least 8 characters' : null,
+                    validator: (value) => value == null || value.length < 8
+                        ? 'Password must be at least 8 characters'
+                        : null,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       hintText: 'Password',
@@ -312,8 +341,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextFormField(
                     controller: _confirmPasswordController,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Please confirm password';
-                      if (value != _passwordController.text) return 'Passwords do not match';
+                      if (value == null || value.isEmpty) {
+                        return 'Please confirm password';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
                       return null;
                     },
                     obscureText: _obscureConfirmPassword,
@@ -347,64 +380,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 32),
                   // Register Button
                   ElevatedButton(
-                    onPressed: _isLoading ? null : () async {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        
-                        // Map role string to roleId (assuming 1=User, 2=Owner, 3=Admin)
-                        int roleId = _selectedRole == 'Owner' ? 2 : 1;
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _isLoading = true;
+                              });
 
-                        var user = await AuthService().register(
-                          name: _nameController.text.trim(),
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text,
-                          roleId: roleId,
-                          phone: _phoneController.text.trim(),
-                          age: int.tryParse(_ageController.text),
-                          gender: _selectedGender,
-                          village: _villageController.text.trim(),
-                          district: _districtController.text.trim(),
-                          province: _provinceController.text.trim(),
-                        );
+                              // Map role string to roleId (assuming 1=User, 2=Owner, 3=Admin)
+                              int roleId = _selectedRole == 'Owner' ? 2 : 1;
 
-                        if (!mounted) return;
-                        
-                        setState(() {
-                          _isLoading = false;
-                        });
+                              var user = await AuthService().register(
+                                name: _nameController.text.trim(),
+                                email: _emailController.text.trim(),
+                                password: _passwordController.text,
+                                roleId: roleId,
+                                phone: _phoneController.text.trim(),
+                                age: int.tryParse(_ageController.text),
+                                gender: _selectedGender,
+                                village: _villageController.text.trim(),
+                                district: _districtController.text.trim(),
+                                province: _provinceController.text.trim(),
+                              );
 
-                        if (user != null) {
-                          // Success! Navigate based on role
-                          if (_selectedRole == 'Owner') {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const OwnerDashboardScreen(),
-                              ),
-                              (route) => false,
-                            );
-                          } else {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
-                              ),
-                              (route) => false,
-                            );
-                          }
-                        } else {
-                          // Show error
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Registration failed. Email might be in use or server error.'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      }
-                    },
+                              if (!mounted) return;
+
+                              setState(() {
+                                _isLoading = false;
+                              });
+
+                              if (user != null) {
+                                // Success! Navigate based on role
+                                if (_selectedRole == 'Owner') {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OwnerDashboardScreen(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                } else {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
+                              } else {
+                                // Show error
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Registration failed. Email might be in use or server error.',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF3B5998),
                       foregroundColor: Colors.white,
@@ -415,22 +453,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       elevation: 4,
                       shadowColor: const Color(
                         0xFF3B5998,
-                      ).withOpacity(0.5),
+                      ).withValues(alpha: 0.5),
                     ),
-                    child: _isLoading 
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                        )
-                      : const Text(
-                          'REGISTER',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'REGISTER',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                            ),
                           ),
-                        ),
                   ),
                   const SizedBox(height: 24),
                   Row(

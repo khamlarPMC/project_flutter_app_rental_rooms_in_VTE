@@ -62,8 +62,23 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                     },
                     itemBuilder: (context, index) {
                       if (room.images != null && room.images!.isNotEmpty) {
+                        final imageUrl = room.images![index].fullImageUrl;
+                        if (imageUrl.isEmpty) {
+                          return Container(
+                            width: double.infinity,
+                            color: Colors.grey.shade300,
+                            child: const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                size: 64,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          );
+                        }
+
                         return Image.network(
-                          room.images![index].fullImageUrl,
+                          imageUrl,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
@@ -127,11 +142,11 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           decoration: BoxDecoration(
                             color: _currentImageIndex == index
                                 ? const Color(0xFF3B5998)
-                                : Colors.white.withOpacity(0.7),
+                                : Colors.white.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(4),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 2,
                               ),
                             ],
@@ -150,7 +165,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -195,7 +210,9 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           color: const Color(0xFFE0EAFC),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF3B5998).withOpacity(0.3),
+                            color: const Color(
+                              0xFF3B5998,
+                            ).withValues(alpha: 0.3),
                           ),
                         ),
                         child: Text(
@@ -288,7 +305,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, -5),
                   ),

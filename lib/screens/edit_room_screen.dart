@@ -5,6 +5,7 @@ import '../models/room_model.dart';
 import '../models/address_model.dart';
 import '../models/amenity_model.dart';
 import '../services/room_service.dart';
+import '../utils/district_villages.dart';
 
 class EditRoomScreen extends StatefulWidget {
   final Room room;
@@ -35,16 +36,8 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
   late TextEditingController _priceController;
   late TextEditingController _descriptionController;
 
-  String _selectedDistrict = 'Central';
-  String _selectedVillage = 'Village A';
-
-  final List<String> _districts = ['Central', 'North', 'South', 'East', 'West'];
-  final List<String> _villages = [
-    'Village A',
-    'Village B',
-    'Village C',
-    'Village D',
-  ];
+  late String _selectedDistrict;
+  late String _selectedVillage;
 
   @override
   void initState() {
@@ -59,15 +52,19 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
       text: room.description ?? '',
     );
 
+    // Initialize district and village defaults
+    _selectedDistrict = districtVillages.keys.first;
+    _selectedVillage = districtVillages[_selectedDistrict]!.first;
+
     if (room.address != null) {
       final district = room.address!.district;
-      if (district != null && _districts.contains(district)) {
+      if (district != null && districtVillages.containsKey(district)) {
         _selectedDistrict = district;
-      }
 
-      final village = room.address!.village;
-      if (village != null && _villages.contains(village)) {
-        _selectedVillage = village;
+        final village = room.address!.village;
+        if (village != null && districtVillages[_selectedDistrict]!.contains(village)) {
+          _selectedVillage = village;
+        }
       }
     }
 
@@ -153,6 +150,14 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Guard: ensure _selectedDistrict and _selectedVillage are always valid
+    if (!districtVillages.containsKey(_selectedDistrict)) {
+      _selectedDistrict = districtVillages.keys.first;
+      _selectedVillage = districtVillages[_selectedDistrict]!.first;
+    } else if (!districtVillages[_selectedDistrict]!.contains(_selectedVillage)) {
+      _selectedVillage = districtVillages[_selectedDistrict]!.first;
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
@@ -267,7 +272,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<String>(
-                            value: _selectedDistrict,
+                            initialValue: _selectedDistrict,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -279,7 +284,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                                 horizontal: 16,
                               ),
                             ),
-                            items: _districts.map((String district) {
+                            items: districtVillages.keys.map((String district) {
                               return DropdownMenuItem<String>(
                                 value: district,
                                 child: Text(district),
@@ -289,6 +294,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                               if (newValue != null) {
                                 setState(() {
                                   _selectedDistrict = newValue;
+                                  _selectedVillage = districtVillages[newValue]!.first;
                                 });
                               }
                             },
@@ -297,7 +303,8 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: DropdownButtonFormField<String>(
-                            value: _selectedVillage,
+                            key: ValueKey('village_dropdown_$_selectedDistrict'),
+                            initialValue: _selectedVillage,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -309,7 +316,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                                 horizontal: 16,
                               ),
                             ),
-                            items: _villages.map((String village) {
+                            items: districtVillages[_selectedDistrict]!.map((String village) {
                               return DropdownMenuItem<String>(
                                 value: village,
                                 child: Text(village),
@@ -369,7 +376,8 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                                             .map((a) => a.amenityId)
                                             .join(','),
                                       ),
-                                      value: _selectedAmenityDropdownValue,
+                                      initialValue:
+                                          _selectedAmenityDropdownValue,
                                       decoration: InputDecoration(
                                         hintText: 'Select an amenity',
                                         filled: true,
@@ -429,7 +437,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                                           deleteIconColor: Colors.red.shade400,
                                           backgroundColor: const Color(
                                             0xFF3B5998,
-                                          ).withOpacity(0.1),
+                                          ).withValues(alpha: 0.1),
                                           labelStyle: const TextStyle(
                                             color: Color(0xFF3B5998),
                                             fontWeight: FontWeight.bold,

@@ -1,19 +1,33 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // ============================================================
 //  APP CONSTANTS
-//  ไฟล์รวมค่า constant และ static ทั้งหมดของแอปพลิเคชัน
-//  นำไปใช้งาน: import 'package:app_rental_room/utils/app_constants.dart';
+//  all values constant and static for application
+//  use this file: import 'package:app_rental_room/utils/app_constants.dart';
 // ============================================================
 
 // ------------------------------------------------------------
 //  API CONFIGURATION
 // ------------------------------------------------------------
 class AppApi {
-  AppApi._(); // ป้องกันการสร้าง instance
+  AppApi._(); // protect create a instance
+
+  /// Host ของ Laravel API ตาม platform
+  static const String _dartDefinedBaseUrl = String.fromEnvironment('BASE_URL', defaultValue: '');
+
+  static String get host {
+    if (_dartDefinedBaseUrl.isNotEmpty) {
+      return _dartDefinedBaseUrl;
+    }
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return 'http://10.0.2.2:8080';
+    }
+    return 'http://127.0.0.1:8080';
+  }
 
   /// Base URL ของ Laravel API
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static String get baseUrl => '$host/api';
 
   // Endpoints - Authentication
   static const String endpointRegister = '/register';

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/app_constants.dart';
@@ -41,6 +42,9 @@ class ApiService {
     Map<String, dynamic> data,
   ) async {
     final url = Uri.parse('$baseUrl$endpoint');
+    debugPrint('API POST: $url');
+    debugPrint('API HEADERS: $headers');
+    debugPrint('API BODY: ${jsonEncode(data)}');
     final response = await http.post(
       url,
       headers: headers,
@@ -102,8 +106,15 @@ class ApiService {
     // Add files
     request.files.addAll(files);
 
+    // Debug logging for multipart
+    debugPrint('API MULTIPART POST: $url');
+    debugPrint('API MULTIPART HEADERS: ${request.headers}');
+    debugPrint('API MULTIPART FIELDS: ${request.fields}');
+    debugPrint('API MULTIPART FILES: ${request.files.map((f) => '${f.field}:${f.filename}').toList()}');
+
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
+    debugPrint('API MULTIPART RESPONSE: ${response.statusCode} - ${response.body}');
     return _handleResponse(response);
   }
 
@@ -111,7 +122,7 @@ class ApiService {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return jsonDecode(response.body);
     } else {
-      print('API Error: ${response.statusCode} - ${response.body}');
+      debugPrint('API Error: ${response.statusCode} - ${response.body}');
 
       try {
         final Map<String, dynamic> errorData = jsonDecode(response.body);
@@ -127,8 +138,14 @@ class ApiService {
         if (e is ApiException) {
           rethrow;
         }
+
+        final cleanBody = response.body.trim();
+        final message = cleanBody.isNotEmpty
+            ? 'Request failed with status code ${response.statusCode}: ${cleanBody.length > 120 ? '${cleanBody.substring(0, 120)}...' : cleanBody}'
+            : 'Request failed with status code ${response.statusCode}';
+
         throw ApiException(
-          message: 'Request failed with status code ${response.statusCode}',
+          message: message,
           statusCode: response.statusCode,
         );
       }
