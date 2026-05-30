@@ -81,7 +81,7 @@ class AuthService {
       } else {
         lastErrorMessage = e.message;
       }
-      print('Login error: ${lastErrorMessage}');
+      print('Login error: $lastErrorMessage');
       return null;
     } catch (e) {
       lastErrorMessage = 'An unexpected error occurred: $e';

@@ -1,16 +1,57 @@
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path/path.dart' as p;
 import '../models/room_model.dart';
 import '../models/amenity_model.dart';
 import 'api_service.dart';
 
 class RoomService {
+  /// Compress an image file to JPEG, max 1920×1920, quality 80.
+  /// Returns compressed bytes, or the original bytes if compression fails.
+  static Future<List<int>> _compressImage(XFile image) async {
+    try {
+      Uint8List? result;
+      if (image.path.startsWith('/') && image.path.length > 1) {
+        result = await FlutterImageCompress.compressWithFile(
+          image.path,
+          minWidth: 1920,
+          minHeight: 1920,
+          quality: 80,
+          format: CompressFormat.jpeg,
+        );
+      } else {
+        final bytes = await image.readAsBytes();
+        result = await FlutterImageCompress.compressWithList(
+          bytes,
+          minWidth: 1920,
+          minHeight: 1920,
+          quality: 80,
+          format: CompressFormat.jpeg,
+        );
+      }
+      if (result != null && result.isNotEmpty) {
+        debugPrint(
+          'RoomService: compressed ${p.basename(image.path)} '
+          '→ ${result.length} bytes',
+        );
+        return result;
+      }
+    } catch (e) {
+      debugPrint('RoomService: compression failed for ${image.path}: $e');
+    }
+    // Fallback: return original bytes
+    return await image.readAsBytes();
+  }
+
   // Fetch all rooms (for user)
   Future<List<Room>> getAllRooms() async {
     try {
       final response = await ApiService.get('/rooms?include=images');
       if (response != null && response['data'] != null) {
-        return (response['data'] as List).map((json) => Room.fromJson(json)).toList();
+        return (response['data'] as List)
+            .map((json) => Room.fromJson(json))
+            .toList();
       }
       return [];
     } catch (e) {
@@ -24,7 +65,9 @@ class RoomService {
     try {
       final response = await ApiService.get('/owner/rooms?include=images');
       if (response != null && response['data'] != null) {
-        return (response['data'] as List).map((json) => Room.fromJson(json)).toList();
+        return (response['data'] as List)
+            .map((json) => Room.fromJson(json))
+            .toList();
       }
       return [];
     } catch (e) {
@@ -38,7 +81,9 @@ class RoomService {
     try {
       final response = await ApiService.get('/amenities');
       if (response != null && response['data'] != null) {
-        return (response['data'] as List).map((json) => Amenity.fromJson(json)).toList();
+        return (response['data'] as List)
+            .map((json) => Amenity.fromJson(json))
+            .toList();
       }
       return [];
     } catch (e) {
@@ -48,7 +93,11 @@ class RoomService {
   }
 
   // Create a new room with images
-  Future<Room?> createRoom(Room room, List<XFile> images, List<int> amenityIds) async {
+  Future<Room?> createRoom(
+    Room room,
+    List<XFile> images,
+    List<int> amenityIds,
+  ) async {
     try {
       final Map<String, String> fields = {
         'room_name': room.roomName,
@@ -63,18 +112,63 @@ class RoomService {
       for (int i = 0; i < amenityIds.length; i++) {
         fields['amenities[$i]'] = amenityIds[i].toString();
       }
-      
+
       List<http.MultipartFile> multipartFiles = [];
-      for (var image in images) {
-        var file = await http.MultipartFile.fromPath(
-          'images[]', // Array key for backend
-          image.path,
+      for (int idx = 0; idx < images.length; idx++) {
+        final image = images[idx];
+        final compressed = await _compressImage(image);
+        // Use .jpg extension since we always compress to JPEG
+        final rawName = p.basename(image.path);
+        final filename = rawName.isNotEmpty
+            ? '${p.basenameWithoutExtension(rawName)}.jpg'
+            : 'image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+        final file = http.MultipartFile.fromBytes(
+          'images[]',
+          compressed,
+          filename: filename,
+        );
+        debugPrint(
+          'RoomService: attaching compressed file '
+          '-> field=images[] name=$filename size=${compressed.length}',
         );
         multipartFiles.add(file);
       }
-      
-      final response = await ApiService.postMultipart('/rooms', fields, multipartFiles);
+
+      final response = await ApiService.postMultipart(
+        '/rooms',
+        fields,
+        multipartFiles,
+      );
       if (response != null && response['data'] != null) {
+        // Check if server returned images; if not, try fetching the room again
+        try {
+          final data = response['data'] as Map<String, dynamic>;
+          final images = data['images'] as List<dynamic>?;
+          if (images == null || images.isEmpty) {
+            final roomId = data['room_id'] ?? data['id'];
+            debugPrint(
+              'RoomService: createRoom response contains no images. Trying to fetch room/$roomId',
+            );
+            if (roomId != null) {
+              try {
+                final fresh = await ApiService.get(
+                  '/rooms/$roomId?include=images',
+                );
+                if (fresh != null && fresh['data'] != null) {
+                  return Room.fromJson(fresh['data']);
+                }
+              } catch (e) {
+                debugPrint('RoomService: failed to fetch room/$roomId: $e');
+              }
+            }
+          }
+        } catch (e) {
+          debugPrint(
+            'RoomService: error while parsing create response images: $e',
+          );
+        }
+
         return Room.fromJson(response['data']);
       }
       return null;
@@ -86,11 +180,11 @@ class RoomService {
 
   // Update an existing room
   Future<Room?> updateRoom(
-    int roomId, 
-    Room room, 
-    List<XFile> newImages, 
+    int roomId,
+    Room room,
+    List<XFile> newImages,
     List<String> removedImageUrls,
-    List<int> amenityIds
+    List<int> amenityIds,
   ) async {
     try {
       final Map<String, String> fields = {
@@ -117,18 +211,60 @@ class RoomService {
           fields['removed_images[$i]'] = fileName;
         }
       }
-      
+
       List<http.MultipartFile> multipartFiles = [];
-      for (var image in newImages) {
-        var file = await http.MultipartFile.fromPath(
+      for (int idx = 0; idx < newImages.length; idx++) {
+        final image = newImages[idx];
+        final compressed = await _compressImage(image);
+        final rawName = p.basename(image.path);
+        final filename = rawName.isNotEmpty
+            ? '${p.basenameWithoutExtension(rawName)}.jpg'
+            : 'image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+        final file = http.MultipartFile.fromBytes(
           'images[]',
-          image.path,
+          compressed,
+          filename: filename,
+        );
+        debugPrint(
+          'RoomService: attaching compressed new file '
+          '-> field=images[] name=$filename size=${compressed.length}',
         );
         multipartFiles.add(file);
       }
-      
-      final response = await ApiService.postMultipart('/rooms/$roomId', fields, multipartFiles);
+
+      final response = await ApiService.postMultipart(
+        '/rooms/$roomId',
+        fields,
+        multipartFiles,
+      );
       if (response != null && response['data'] != null) {
+        // If server didn't return images, try fetching room by id again
+        try {
+          final data = response['data'] as Map<String, dynamic>;
+          final images = data['images'] as List<dynamic>?;
+          if (images == null || images.isEmpty) {
+            final fetchedId = data['room_id'] ?? data['id'] ?? roomId;
+            debugPrint(
+              'RoomService: updateRoom response contains no images. Trying to fetch room/$fetchedId',
+            );
+            try {
+              final fresh = await ApiService.get(
+                '/rooms/$fetchedId?include=images',
+              );
+              if (fresh != null && fresh['data'] != null) {
+                return Room.fromJson(fresh['data']);
+              }
+            } catch (e) {
+              debugPrint('RoomService: failed to fetch room/$fetchedId: $e');
+            }
+          }
+        } catch (e) {
+          debugPrint(
+            'RoomService: error while parsing update response images: $e',
+          );
+        }
+
         return Room.fromJson(response['data']);
       }
       return null;
@@ -137,9 +273,14 @@ class RoomService {
       return null;
     }
   }
-  
+
   // Example for booking a room
-  Future<bool> bookRoom(int roomId, DateTime moveInDate, DateTime? moveOutDate, int totalMonths) async {
+  Future<bool> bookRoom(
+    int roomId,
+    DateTime moveInDate,
+    DateTime? moveOutDate,
+    int totalMonths,
+  ) async {
     try {
       final response = await ApiService.post('/bookings', {
         'room_id': roomId,

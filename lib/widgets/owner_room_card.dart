@@ -96,7 +96,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         decoration: BoxDecoration(
                           color: _currentImageIndex == idx
                               ? const Color(0xFF3B5998)
-                              : Colors.white.withOpacity(0.8),
+                              : Colors.white.withValues(alpha: 0.8),
                           borderRadius: BorderRadius.circular(3),
                         ),
                       ),
@@ -115,14 +115,16 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                       decoration: BoxDecoration(
                         color: Colors.orange.shade100,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.orange.shade400,
-                        ),
+                        border: Border.all(color: Colors.orange.shade400),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.hourglass_empty, size: 14, color: Colors.orange.shade800),
+                          Icon(
+                            Icons.hourglass_empty,
+                            size: 14,
+                            color: Colors.orange.shade800,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Pending Approval',

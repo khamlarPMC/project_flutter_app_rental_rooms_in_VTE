@@ -35,13 +35,24 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
 
   Future<void> _pickImages() async {
     try {
-      final List<XFile> pickedImages = await _picker.pickMultiImage();
+      final List<XFile> pickedImages = await _picker.pickMultiImage(
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      debugPrint('PhotoPicker: pickedImages raw => $pickedImages');
       if (pickedImages.isNotEmpty) {
-        final int remainingSlots = widget.maxImages - (_selectedImages.length + _currentExistingUrls.length);
-        
+        final int remainingSlots =
+            widget.maxImages -
+            (_selectedImages.length + _currentExistingUrls.length);
+
         if (pickedImages.length > remainingSlots && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('You can only add up to ${widget.maxImages} photos. Extra photos were ignored.')),
+            SnackBar(
+              content: Text(
+                'You can only add up to ${widget.maxImages} photos. Extra photos were ignored.',
+              ),
+            ),
           );
         }
 
@@ -89,7 +100,7 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFF3B5998).withOpacity(0.3),
+              color: const Color(0xFF3B5998).withValues(alpha: 0.3),
               width: 2,
               style: BorderStyle.solid,
             ),
@@ -100,13 +111,13 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
               Icon(
                 Icons.add_a_photo_outlined,
                 size: 48,
-                color: const Color(0xFF3B5998).withOpacity(0.5),
+                color: const Color(0xFF3B5998).withValues(alpha: 0.5),
               ),
               const SizedBox(height: 8),
               Text(
                 'Tap to add up to ${widget.maxImages} photos',
                 style: TextStyle(
-                  color: const Color(0xFF3B5998).withOpacity(0.7),
+                  color: const Color(0xFF3B5998).withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -122,7 +133,9 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
             height: 120,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: totalCount < widget.maxImages ? totalCount + 1 : totalCount,
+              itemCount: totalCount < widget.maxImages
+                  ? totalCount + 1
+                  : totalCount,
               itemBuilder: (context, index) {
                 if (index == totalCount && totalCount < widget.maxImages) {
                   return GestureDetector(
@@ -134,7 +147,7 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF3B5998).withOpacity(0.3),
+                          color: const Color(0xFF3B5998).withValues(alpha: 0.3),
                           width: 2,
                           style: BorderStyle.solid,
                         ),
@@ -185,42 +198,78 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
     String? imageUrl,
     File? file,
   }) {
-    return Stack(
-      children: [
-        Container(
-          width: 120,
-          margin: const EdgeInsets.only(right: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: Colors.grey.shade200,
-            image: DecorationImage(
-              image: isExisting 
-                ? NetworkImage(imageUrl!) as ImageProvider
-                : FileImage(file!),
-              fit: BoxFit.cover,
+    return SizedBox(
+      width: 120,
+      height: 120,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.grey.shade200,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: isExisting
+                  ? (imageUrl != null && imageUrl.isNotEmpty
+                        ? Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            width: 120,
+                            height: 120,
+                            errorBuilder: (context, error, stackTrace) {
+                              debugPrint('Image.network error: $error');
+                              return Container(
+                                color: Colors.grey.shade200,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                    size: 36,
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Container(
+                            width: 120,
+                            height: 120,
+                            color: Colors.grey.shade200,
+                            child: const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                              size: 36,
+                            ),
+                          ))
+                  : Image.file(
+                      file!,
+                      fit: BoxFit.cover,
+                      width: 120,
+                      height: 120,
+                    ),
             ),
           ),
-        ),
-        Positioned(
-          top: 4,
-          right: 16,
-          child: GestureDetector(
-            onTap: () => isExisting ? _removeExistingImage(index) : _removeSelectedImage(index),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                color: Colors.black54,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 16,
+          Positioned(
+            top: 4,
+            right: 16,
+            child: GestureDetector(
+              onTap: () => isExisting
+                  ? _removeExistingImage(index)
+                  : _removeSelectedImage(index),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.close, color: Colors.white, size: 16),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -47,18 +47,34 @@ class RoomCard extends StatelessWidget {
                         : 1,
                     itemBuilder: (context, idx) {
                       if (room.images != null && room.images!.isNotEmpty) {
+                        final imgUrl = room.images![idx].fullImageUrl;
+                        debugPrint('RoomCard: loading image -> $imgUrl');
+
+                        if (imgUrl.isEmpty) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(
+                              Icons.image_not_supported,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                          );
+                        }
+
                         return Image.network(
-                          room.images![idx].fullImageUrl,
+                          imgUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
-                                color: Colors.grey.shade200,
-                                child: const Icon(
-                                  Icons.broken_image,
-                                  size: 50,
-                                  color: Colors.grey,
-                                ),
+                          errorBuilder: (context, error, stackTrace) {
+                            debugPrint('RoomCard Image.network error: $error');
+                            return Container(
+                              color: Colors.grey.shade200,
+                              child: const Icon(
+                                Icons.broken_image,
+                                size: 50,
+                                color: Colors.grey,
                               ),
+                            );
+                          },
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
                             return const Center(
@@ -87,7 +103,7 @@ class RoomCard extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.9),
+                        color: statusColor.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -110,10 +126,10 @@ class RoomCard extends StatelessWidget {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE0EAFC).withOpacity(0.9),
+                        color: const Color(0xFFE0EAFC).withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF3B5998).withOpacity(0.3),
+                          color: const Color(0xFF3B5998).withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
