@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/room_model.dart';
 import 'book_room_screen.dart';
@@ -36,10 +37,10 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
         AuthService.currentUser?.roleId == 3;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
         title: const Text('Room Details'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -77,25 +78,26 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           );
                         }
 
-                        return Image.network(
-                          imageUrl,
+                        return CachedNetworkImage(
+                          imageUrl: imageUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey.shade300,
-                              child: const Icon(
-                                Icons.broken_image,
-                                size: 64,
-                                color: Colors.grey,
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Color(0xFFD4A373),
                               ),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey.shade300,
+                            child: const Icon(
+                              Icons.broken_image,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
+                          ),
                         );
                       }
 
@@ -141,7 +143,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           height: 8,
                           decoration: BoxDecoration(
                             color: _currentImageIndex == index
-                                ? const Color(0xFF3B5998)
+                                ? const Color(0xFFD4A373)
                                 : Colors.white.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(4),
                             boxShadow: [
@@ -207,11 +209,11 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE0EAFC),
+                          color: const Color(0xFFFAEDCD),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: const Color(
-                              0xFF3B5998,
+                              0xFFD4A373,
                             ).withValues(alpha: 0.3),
                           ),
                         ),
@@ -220,7 +222,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF3B5998),
+                            color: Color(0xFFD4A373),
                           ),
                         ),
                       ),
@@ -245,7 +247,62 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
+                  // Owner Contact
+                  if (room.owner != null) ...[
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD4A373).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFD4A373).withValues(alpha: 0.3)),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 22,
+                            backgroundColor: const Color(0xFFD4A373).withValues(alpha: 0.2),
+                            child: const Icon(Icons.person, color: Color(0xFFD4A373), size: 24),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  room.owner!.name,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF333333),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                if (room.owner!.phone != null && room.owner!.phone!.isNotEmpty)
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.phone, size: 14, color: Color(0xFFD4A373)),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        room.owner!.phone!,
+                                        style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                                      ),
+                                    ],
+                                  )
+                                else
+                                  Text(
+                                    'No phone number',
+                                    style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.contact_phone_outlined, color: Color(0xFFD4A373), size: 22),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                   // Description
                   const Text(
                     'Description',
@@ -321,7 +378,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF3B5998),
+                  backgroundColor: const Color(0xFFD4A373),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

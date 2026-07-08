@@ -15,7 +15,7 @@ class ApiException implements Exception {
 }
 
 class ApiService {
-  // Base URL ดึงมาจาก AppApi.baseUrl ใน app_constants.dart
+  // Base URL from AppApi.baseUrl in app_constants.dart
   static String get baseUrl => AppApi.baseUrl;
 
   // You should store and retrieve this token using a package like flutter_secure_storage

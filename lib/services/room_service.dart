@@ -274,6 +274,16 @@ class RoomService {
     }
   }
 
+  Future<bool> requestDeletion(int roomId) async {
+    try {
+      await ApiService.patch('/rooms/$roomId/request-delete', {});
+      return true;
+    } catch (e) {
+      debugPrint('Request deletion error: $e');
+      rethrow;
+    }
+  }
+
   // Example for booking a room
   Future<bool> bookRoom(
     int roomId,

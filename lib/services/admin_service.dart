@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../models/user_model.dart';
 import '../models/room_model.dart';
 import '../models/booking_model.dart';
@@ -59,6 +60,26 @@ class AdminService {
     } catch (e) {
       print('Error approving room: $e');
       return false;
+    }
+  }
+
+  Future<bool> confirmDeleteRoom(int id) async {
+    try {
+      await ApiService.delete('/admin/rooms/$id');
+      return true;
+    } catch (e) {
+      print('Error confirming room deletion: $e');
+      return false;
+    }
+  }
+
+  Future<bool> rejectDeletion(int id) async {
+    try {
+      await ApiService.patch('/admin/rooms/$id/reject-delete', {});
+      return true;
+    } catch (e) {
+      debugPrint('Error rejecting deletion: $e');
+      rethrow;
     }
   }
 

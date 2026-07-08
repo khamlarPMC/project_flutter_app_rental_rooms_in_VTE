@@ -32,7 +32,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFFEFAE0),
       body: currentView,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -52,7 +52,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             });
           },
           backgroundColor: Colors.white,
-          selectedItemColor: const Color(0xFF3B5998),
+          selectedItemColor: const Color(0xFFD4A373),
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
           items: const [
@@ -82,7 +82,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                   setState(() {}); // Re-build to refresh MyRoomsView
                 }
               },
-              backgroundColor: const Color(0xFF3B5998),
+              backgroundColor: const Color(0xFFD4A373),
               foregroundColor: Colors.white,
               icon: const Icon(Icons.add),
               label: const Text('Add Room'),

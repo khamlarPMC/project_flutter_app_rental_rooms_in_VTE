@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -100,7 +101,7 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFF3B5998).withValues(alpha: 0.3),
+              color: const Color(0xFFD4A373).withValues(alpha: 0.3),
               width: 2,
               style: BorderStyle.solid,
             ),
@@ -111,13 +112,13 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
               Icon(
                 Icons.add_a_photo_outlined,
                 size: 48,
-                color: const Color(0xFF3B5998).withValues(alpha: 0.5),
+                color: const Color(0xFFD4A373).withValues(alpha: 0.5),
               ),
               const SizedBox(height: 8),
               Text(
                 'Tap to add up to ${widget.maxImages} photos',
                 style: TextStyle(
-                  color: const Color(0xFF3B5998).withValues(alpha: 0.7),
+                  color: const Color(0xFFD4A373).withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -147,7 +148,7 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF3B5998).withValues(alpha: 0.3),
+                          color: const Color(0xFFD4A373).withValues(alpha: 0.3),
                           width: 2,
                           style: BorderStyle.solid,
                         ),
@@ -155,7 +156,7 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
                       child: const Center(
                         child: Icon(
                           Icons.add_a_photo,
-                          color: Color(0xFF3B5998),
+                          color: Color(0xFFD4A373),
                           size: 32,
                         ),
                       ),
@@ -214,24 +215,30 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
               borderRadius: BorderRadius.circular(12),
               child: isExisting
                   ? (imageUrl != null && imageUrl.isNotEmpty
-                        ? Image.network(
-                            imageUrl,
+                        ? CachedNetworkImage(
+                            imageUrl: imageUrl,
                             fit: BoxFit.cover,
                             width: 120,
                             height: 120,
-                            errorBuilder: (context, error, stackTrace) {
-                              debugPrint('Image.network error: $error');
-                              return Container(
-                                color: Colors.grey.shade200,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.broken_image,
-                                    color: Colors.grey,
-                                    size: 36,
-                                  ),
+                            placeholder: (context, url) => Container(
+                              color: Colors.grey.shade200,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Color(0xFFD4A373),
                                 ),
-                              );
-                            },
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey.shade200,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                  size: 36,
+                                ),
+                              ),
+                            ),
                           )
                         : Container(
                             width: 120,

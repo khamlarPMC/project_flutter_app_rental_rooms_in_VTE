@@ -52,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFE0EAFC), Color(0xFFCFDEF3)],
+            colors: [Color(0xFFFEFAE0), Color(0xFFFAEDCD)],
           ),
         ),
         child: Center(
@@ -68,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const Icon(
                     Icons.person_add_alt_1_rounded,
                     size: 80,
-                    color: Color(0xFF3B5998),
+                    color: Color(0xFFD4A373),
                   ),
                   const SizedBox(height: 24),
                   const Text(
@@ -83,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Sign up to get started and find your room.',
+                    'Let\'s set up your cozy new home experience.',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
@@ -406,12 +406,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                               if (!mounted) return;
 
-                              setState(() {
-                                _isLoading = false;
-                              });
-
                               if (user != null) {
-                                // Success! Navigate based on role
+                                // Keep loading state while navigating
                                 if (_selectedRole == 'Owner') {
                                   Navigator.pushAndRemoveUntil(
                                     context,
@@ -431,6 +427,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   );
                                 }
                               } else {
+                                setState(() {
+                                  _isLoading = false;
+                                });
                                 // Show error
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -444,7 +443,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3B5998),
+                      backgroundColor: const Color(0xFFD4A373),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -452,7 +451,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       elevation: 4,
                       shadowColor: const Color(
-                        0xFF3B5998,
+                        0xFFD4A373,
                       ).withValues(alpha: 0.5),
                     ),
                     child: _isLoading
@@ -489,7 +488,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           'Log In',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF3B5998),
+                            color: Color(0xFFD4A373),
                           ),
                         ),
                       ),

@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../utils/app_constants.dart';
@@ -30,8 +28,6 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
   String _roleName = 'User';
   bool _isLoading = false;
 
-  XFile? _profileImage;
-  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -94,28 +90,6 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
     _districtController.text = user.address?.district ?? '';
     _provinceController.text = user.address?.province ?? '';
     _roleName = user.role?.roleName ?? widget.initialRole;
-  }
-
-  Future<void> _pickImage() async {
-    try {
-      final XFile? pickedImage = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 512,
-        maxHeight: 512,
-        imageQuality: 85,
-      );
-      if (pickedImage != null) {
-        setState(() {
-          _profileImage = pickedImage;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
-      }
-    }
   }
 
   Future<void> _saveProfile() async {
@@ -219,50 +193,22 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Profile Picture section
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Container(
-                          width: 110,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            color: AppColors.backgroundCard,
-                            shape: BoxShape.circle,
-                            boxShadow: AppShadow.avatar,
-                            image: _profileImage != null
-                                ? DecorationImage(
-                                    image: FileImage(File(_profileImage!.path)),
-                                    fit: BoxFit.cover,
-                                  )
-                                : null,
-                            border: Border.all(color: Colors.white, width: 4),
-                          ),
-                          child: _profileImage == null
-                              ? Center(
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 64,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                )
-                              : null,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: const BoxDecoration(
-                            color: AppColors.primary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ],
+                  // Profile Picture
+                  Container(
+                    width: 110,
+                    height: 110,
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundCard,
+                      shape: BoxShape.circle,
+                      boxShadow: AppShadow.avatar,
+                      border: Border.all(color: Colors.white, width: 4),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.person,
+                        size: 64,
+                        color: Colors.grey.shade400,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),

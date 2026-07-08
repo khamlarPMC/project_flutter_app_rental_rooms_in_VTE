@@ -17,7 +17,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFFEFAE0),
       body: _views[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
             });
           },
           backgroundColor: Colors.white,
-          selectedItemColor: const Color(0xFF3B5998),
+          selectedItemColor: const Color(0xFFD4A373),
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,

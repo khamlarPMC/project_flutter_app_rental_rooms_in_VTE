@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/room_model.dart';
 import '../screens/detail_room_screen.dart';
@@ -61,11 +62,20 @@ class RoomCard extends StatelessWidget {
                           );
                         }
 
-                        return Image.network(
-                          imgUrl,
+                        return CachedNetworkImage(
+                          imageUrl: imgUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            debugPrint('RoomCard Image.network error: $error');
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Color(0xFFD4A373),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) {
+                            debugPrint('RoomCard image error: $error');
                             return Container(
                               color: Colors.grey.shade200,
                               child: const Icon(
@@ -73,12 +83,6 @@ class RoomCard extends StatelessWidget {
                                 size: 50,
                                 color: Colors.grey,
                               ),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: CircularProgressIndicator(),
                             );
                           },
                         );
@@ -126,10 +130,10 @@ class RoomCard extends StatelessWidget {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE0EAFC).withValues(alpha: 0.9),
+                        color: const Color(0xFFFAEDCD).withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF3B5998).withValues(alpha: 0.3),
+                          color: const Color(0xFFD4A373).withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -137,7 +141,7 @@ class RoomCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF3B5998),
+                          color: Color(0xFFD4A373),
                         ),
                       ),
                     ),
@@ -179,6 +183,26 @@ class RoomCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                  if (room.owner != null)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          size: 18,
+                          color: Colors.grey.shade600,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Owner: ${room.owner!.name}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
                   const SizedBox(height: 16),
                   if (AuthService.currentUser?.roleId != 2)
                     Row(
@@ -198,7 +222,7 @@ class RoomCard extends StatelessWidget {
                               : null, // Disable button if occupied
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isAvailable
-                                ? const Color(0xFF3B5998)
+                                ? const Color(0xFFD4A373)
                                 : Colors.grey,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(

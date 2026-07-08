@@ -125,10 +125,10 @@ class _AddListingScreenState extends State<AddListingScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
         title: const Text('Add New Listing'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -231,6 +231,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<String>(
+                            isExpanded: true,
                             initialValue: _selectedDistrict,
                             decoration: InputDecoration(
                               filled: true,
@@ -246,7 +247,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                             items: districtVillages.keys.map((String district) {
                               return DropdownMenuItem<String>(
                                 value: district,
-                                child: Text(district),
+                                child: Text(district, overflow: TextOverflow.ellipsis),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -263,6 +264,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             key: ValueKey('village_dropdown_$_selectedDistrict'),
+                            isExpanded: true,
                             initialValue: _selectedVillage,
                             decoration: InputDecoration(
                               filled: true,
@@ -278,7 +280,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                             items: districtVillages[_selectedDistrict]!.map((String village) {
                               return DropdownMenuItem<String>(
                                 value: village,
-                                child: Text(village),
+                                child: Text(village, overflow: TextOverflow.ellipsis),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -391,10 +393,10 @@ class _AddListingScreenState extends State<AddListingScreen> {
                                           },
                                           deleteIconColor: Colors.red.shade400,
                                           backgroundColor: const Color(
-                                            0xFF3B5998,
+                                            0xFFD4A373,
                                           ).withValues(alpha: 0.1),
                                           labelStyle: const TextStyle(
-                                            color: Color(0xFF3B5998),
+                                            color: Color(0xFFD4A373),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         );
@@ -443,7 +445,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     ElevatedButton(
                       onPressed: _submitListing,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3B5998),
+                        backgroundColor: const Color(0xFFD4A373),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(

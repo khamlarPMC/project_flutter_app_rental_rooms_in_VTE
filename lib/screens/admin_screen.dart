@@ -26,7 +26,7 @@ class AdminScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 48, color: const Color(0xFF3B5998)),
+              Icon(icon, size: 48, color: const Color(0xFFD4A373)),
               const SizedBox(height: 12),
               Text(
                 title,
@@ -51,7 +51,7 @@ class AdminScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -73,7 +73,7 @@ class AdminScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFE0EAFC), Color(0xFFCFDEF3)],
+            colors: [Color(0xFFFEFAE0), Color(0xFFFAEDCD)],
           ),
         ),
         child: Column(
@@ -81,7 +81,7 @@ class AdminScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 24.0),
               child: Text(
-                'Welcome, Administrator',
+                'Welcome back! 👋',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
