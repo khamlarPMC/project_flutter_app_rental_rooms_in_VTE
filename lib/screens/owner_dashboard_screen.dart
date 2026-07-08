@@ -3,6 +3,7 @@ import 'package:app_rental_room/screens/home_screen.dart';
 import 'package:app_rental_room/screens/add_listing_screen.dart';
 import 'package:app_rental_room/screens/owner/views/my_rooms_view.dart';
 import 'package:app_rental_room/screens/owner/views/bookings_view.dart';
+import 'package:app_rental_room/l10n/app_localizations.dart';
 
 class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
@@ -55,16 +56,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
           selectedItemColor: const Color(0xFFD4A373),
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_work),
-              label: 'My Rooms',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.book_online),
-              label: 'Bookings',
-            ),
+          items: [
+            BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('home')),
+            BottomNavigationBarItem(icon: const Icon(Icons.home_work), label: context.tr('myRooms')),
+            BottomNavigationBarItem(icon: const Icon(Icons.book_online), label: context.tr('bookings')),
           ],
         ),
       ),
@@ -85,7 +80,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               backgroundColor: const Color(0xFFD4A373),
               foregroundColor: Colors.white,
               icon: const Icon(Icons.add),
-              label: const Text('Add Room'),
+              label: Text(context.tr('addRoom')),
             )
           : null,
     );

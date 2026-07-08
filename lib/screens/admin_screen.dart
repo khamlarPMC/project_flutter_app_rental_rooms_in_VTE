@@ -5,6 +5,7 @@ import 'admin_bookings_screen.dart';
 import 'admin_reports_screen.dart';
 import 'login_screen.dart';
 import '../services/auth_service.dart';
+import '../l10n/app_localizations.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -48,9 +49,10 @@ class AdminScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
+        title: Text(l.tr('adminDashboard')),
         backgroundColor: const Color(0xFFD4A373),
         actions: [
           IconButton(
@@ -78,11 +80,11 @@ class AdminScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24.0),
               child: Text(
-                'Welcome back! 👋',
-                style: TextStyle(
+                l.tr('welcomeAdmin'),
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF333333),
@@ -95,10 +97,10 @@ class AdminScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 children: [
-                  _buildDashboardCard(context, 'Manage Users', Icons.people, const AdminUsersScreen()),
-                  _buildDashboardCard(context, 'Manage Rooms', Icons.meeting_room, const AdminRoomsScreen()),
-                  _buildDashboardCard(context, 'Manage Bookings', Icons.book_online, const AdminBookingsScreen()),
-                  _buildDashboardCard(context, 'Reports', Icons.bar_chart, const AdminReportsScreen()),
+                  _buildDashboardCard(context, l.tr('manageUsers'), Icons.people, const AdminUsersScreen()),
+                  _buildDashboardCard(context, l.tr('manageRooms'), Icons.meeting_room, const AdminRoomsScreen()),
+                  _buildDashboardCard(context, l.tr('manageBookings'), Icons.book_online, const AdminBookingsScreen()),
+                  _buildDashboardCard(context, l.tr('reports'), Icons.bar_chart, const AdminReportsScreen()),
                 ],
               ),
             ),

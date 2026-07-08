@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 class HomeFilterBar extends StatelessWidget {
   final TextEditingController searchController;
@@ -39,7 +40,7 @@ class HomeFilterBar extends StatelessWidget {
             controller: searchController,
             onChanged: onSearchChanged,
             decoration: InputDecoration(
-              hintText: 'Search for rooms, locations...',
+              hintText: context.tr('searchForRooms'),
               prefixIcon: const Icon(Icons.search, color: Colors.grey),
               filled: true,
               fillColor: Colors.white,

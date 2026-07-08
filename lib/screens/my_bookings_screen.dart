@@ -3,6 +3,7 @@ import '../models/booking_model.dart';
 import '../services/booking_service.dart';
 import 'package:intl/intl.dart';
 import 'book_room_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});
@@ -41,19 +42,20 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   }
 
   Future<void> _cancelBooking(int bookingId) async {
+    final l = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Cancel Booking'),
-        content: const Text('Are you sure you want to cancel this booking?'),
+        title: Text(l.tr('cancelBooking')),
+        content: Text(l.tr('cancelBookingMsg')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('NO'),
+            child: Text(l.tr('cancelNo')),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('YES, CANCEL'),
+            child: Text(l.tr('cancelYesCancel')),
           ),
         ],
       ),
@@ -65,7 +67,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         if (result['success'] == true) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Booking cancelled successfully')),
+              SnackBar(content: Text(AppLocalizations.of(context).tr('bookingSuccess'))),
             );
           }
           _fetchBookings();
@@ -140,7 +142,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Bookings'),
+        title: Text(context.tr('myBookings')),
         backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
       ),
@@ -169,15 +171,15 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         children: [
           Icon(Icons.event_busy, size: 80, color: Colors.grey.shade400),
           const SizedBox(height: 16),
-          const Text(
-            'You haven\'t booked any rooms yet.',
-            style: TextStyle(fontSize: 18, color: Colors.grey),
+          Text(
+            context.tr('noBookingsYetMsg'),
+            style: const TextStyle(fontSize: 18, color: Colors.grey),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: _fetchBookings,
             icon: const Icon(Icons.refresh),
-            label: const Text('Refresh'),
+            label: Text(context.tr('refresh')),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFD4A373),
               foregroundColor: Colors.white,
@@ -273,9 +275,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                       children: [
                         const Icon(Icons.delete_outline, size: 16, color: Color(0xFFDC2626)),
                         const SizedBox(width: 8),
-                        const Text(
-                          'This room has been removed from the system.',
-                          style: TextStyle(
+                        Text(
+                          context.tr('roomRemovedMsg'),
+                          style: const TextStyle(
                             fontSize: 13,
                             color: Color(0xFFDC2626),
                             fontWeight: FontWeight.w600,
@@ -301,7 +303,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              isRoomDeleted ? 'Room has been deleted' : (booking.room?.roomName ?? 'Room #${booking.roomId}'),
+                              isRoomDeleted ? context.tr('roomHasBeenDeleted') : (booking.room?.roomName ?? 'Room #${booking.roomId}'),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -339,7 +341,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Move-in',
+                            context.tr('moveInLabel'),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
@@ -366,7 +368,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Move-out',
+                            context.tr('moveOutLabel'),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
@@ -408,7 +410,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Duration',
+                            context.tr('duration'),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
@@ -435,7 +437,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Total',
+                            context.tr('total'),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
@@ -464,7 +466,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           child: ElevatedButton.icon(
                             onPressed: () => _cancelBooking(booking.bookingId!),
                             icon: const Icon(Icons.close, size: 18),
-                            label: const Text('Cancel'),
+                            label: Text(context.tr('cancel')),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red.shade400,
                               foregroundColor: Colors.white,
@@ -494,7 +496,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                 }
                               },
                               icon: const Icon(Icons.edit, size: 18),
-                              label: const Text('Edit'),
+                              label: Text(context.tr('edit')),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green.shade500,
                                 foregroundColor: Colors.white,

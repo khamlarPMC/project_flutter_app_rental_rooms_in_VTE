@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/room_model.dart';
 import 'book_room_screen.dart';
 import '../services/auth_service.dart';
+import '../l10n/app_localizations.dart';
 
 class DetailRoomScreen extends StatefulWidget {
   final Room room;
@@ -18,6 +19,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final room = widget.room;
     final int totalImages = room.images != null && room.images!.isNotEmpty
         ? room.images!.length
@@ -26,8 +28,8 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
     final String price = '\$${room.pricePerMonth.toStringAsFixed(0)}/mo';
     final String location = room.address != null
         ? '${room.address!.village}, ${room.address!.district}'
-        : 'Location not set';
-    final String description = room.description ?? 'No description available.';
+        : l.tr('notSet');
+    final String description = room.description ?? l.tr('noDescription');
     final List<String> amenities =
         room.amenities?.map((a) => a.amenityName ?? '').toList() ?? [];
 
@@ -39,7 +41,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
-        title: const Text('Room Details'),
+        title: Text(l.tr('roomDetails')),
         backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -104,19 +106,19 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                       return Container(
                         width: double.infinity,
                         color: Colors.grey.shade300,
-                        child: const Center(
+                        child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.image,
                                 size: 64,
                                 color: Colors.white70,
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
-                                'No images available',
-                                style: TextStyle(
+                                l.tr('noImagesAvailable'),
+                                style: const TextStyle(
                                   color: Colors.white70,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -291,7 +293,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                                   )
                                 else
                                   Text(
-                                    'No phone number',
+                                    l.tr('noPhoneNumber'),
                                     style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
                                   ),
                               ],
@@ -304,9 +306,9 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                     const SizedBox(height: 24),
                   ],
                   // Description
-                  const Text(
-                    'Description',
-                    style: TextStyle(
+                  Text(
+                    l.tr('description'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF333333),
@@ -323,9 +325,9 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                   ),
                   const SizedBox(height: 24),
                   // Amenities
-                  const Text(
-                    'Amenities',
-                    style: TextStyle(
+                  Text(
+                    l.tr('amenities'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF333333),
@@ -385,9 +387,9 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Book This Room',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Text(
+                  l.tr('bookThisRoom'),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

@@ -6,6 +6,7 @@ import '../models/address_model.dart';
 import '../models/amenity_model.dart';
 import '../services/room_service.dart';
 import '../utils/district_villages.dart';
+import '../l10n/app_localizations.dart';
 
 class EditRoomScreen extends StatefulWidget {
   final Room room;
@@ -101,15 +102,16 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final l = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Save Changes'),
-        content: const Text('Are you sure you want to save the changes to this room?'),
+        title: Text(l.tr('saveChanges')),
+        content: Text(l.tr('areYouSureToSave')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l.tr('cancel')),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -117,7 +119,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
               backgroundColor: const Color(0xFFD4A373),
               foregroundColor: Colors.white,
             ),
-            child: const Text('Save'),
+            child: Text(l.tr('save')),
           ),
         ],
       ),
@@ -150,8 +152,8 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
       if (result != null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Changes saved successfully!'),
+            SnackBar(
+              content: Text(context.tr('changesSavedSuccess')),
               backgroundColor: Colors.green,
             ),
           );
@@ -184,7 +186,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
-        title: const Text('Edit Room'),
+        title: Text(context.tr('editRoomTitle')),
         backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -218,9 +220,9 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                     const SizedBox(height: 24),
 
                     // Title Field
-                    const Text(
-                      'Listing Title',
-                      style: TextStyle(
+                    Text(
+                      context.tr('roomName'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -230,7 +232,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                     TextFormField(
                       controller: _titleController,
                       decoration: InputDecoration(
-                        hintText: 'e.g., Cozy Modern Apartment',
+                        hintText: context.tr('roomName'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -243,15 +245,15 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                         ),
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter a title'
+                          ? context.tr('pleaseEnterTitle')
                           : null,
                     ),
                     const SizedBox(height: 20),
 
                     // Price Field
-                    const Text(
-                      'Monthly Price (\$)',
-                      style: TextStyle(
+                    Text(
+                      context.tr('pricePerMonth'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -276,15 +278,15 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                         ),
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter a price'
+                          ? context.tr('pleaseEnterPrice')
                           : null,
                     ),
                     const SizedBox(height: 20),
 
                     // Location Dropdowns
-                    const Text(
-                      'Location',
-                      style: TextStyle(
+                    Text(
+                      context.tr('location'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -361,9 +363,9 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                     const SizedBox(height: 20),
 
                     // Amenities Section
-                    const Text(
-                      'Amenities',
-                      style: TextStyle(
+                    Text(
+                      context.tr('selectAmenities'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -404,7 +406,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                                       initialValue:
                                           _selectedAmenityDropdownValue,
                                       decoration: InputDecoration(
-                                        hintText: 'Select an amenity',
+                                        hintText: context.tr('selectAnAmenity'),
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
@@ -478,9 +480,9 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                     const SizedBox(height: 20),
 
                     // Description Field
-                    const Text(
-                      'Description',
-                      style: TextStyle(
+                    Text(
+                      context.tr('description'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -491,7 +493,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                       controller: _descriptionController,
                       maxLines: 4,
                       decoration: InputDecoration(
-                        hintText: 'Describe the room, facilities, and rules...',
+                        hintText: context.tr('descriptionHint'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -504,7 +506,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                         ),
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter a description'
+                          ? context.tr('pleaseEnterDescription')
                           : null,
                     ),
                     const SizedBox(height: 32),
@@ -521,8 +523,8 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                         ),
                         elevation: 2,
                       ),
-                      child: const Text(
-                        'SAVE CHANGES',
+                      child: Text(
+                        context.tr('saveChanges').toUpperCase(),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

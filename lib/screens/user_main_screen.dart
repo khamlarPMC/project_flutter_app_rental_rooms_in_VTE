@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'my_bookings_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class UserMainScreen extends StatefulWidget {
   const UserMainScreen({super.key});
@@ -41,12 +42,9 @@ class _UserMainScreenState extends State<UserMainScreen> {
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt),
-              label: 'My Bookings',
-            ),
+          items: [
+            BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('home')),
+            BottomNavigationBarItem(icon: const Icon(Icons.list_alt), label: context.tr('myBookings')),
           ],
         ),
       ),
