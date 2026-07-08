@@ -17,7 +17,7 @@ class AdminUserDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Details'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -36,7 +36,7 @@ class AdminUserDetailScreen extends StatelessWidget {
                 Center(
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundColor: const Color(0xFF3B5998),
+                    backgroundColor: const Color(0xFFD4A373),
                     child: Text(
                       user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
                       style: const TextStyle(color: Colors.white, fontSize: 40),
@@ -116,7 +116,7 @@ class AdminUserDetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: const Color(0xFF3B5998), size: 24),
+          Icon(icon, color: const Color(0xFFD4A373), size: 24),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

@@ -80,6 +80,16 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     }
   }
 
+  String _resolveStatus(Booking booking) {
+    final status = booking.bookingStatus.toLowerCase();
+    if (status == 'confirmed' &&
+        booking.moveOutDate != null &&
+        booking.moveOutDate!.isBefore(DateTime.now())) {
+      return 'expired';
+    }
+    return status;
+  }
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'confirmed':
@@ -88,9 +98,41 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         return Colors.red;
       case 'completed':
         return Colors.blue;
+      case 'expired':
+        return Colors.grey;
       case 'pending':
       default:
         return Colors.orange;
+    }
+  }
+
+  String _getStatusLabel(String status) {
+    switch (status.toLowerCase()) {
+      case 'confirmed':
+        return 'CONFIRMED';
+      case 'cancelled':
+        return 'CANCELLED';
+      case 'completed':
+        return 'COMPLETED';
+      case 'expired':
+        return 'EXPIRED';
+      case 'pending':
+      default:
+        return 'PENDING';
+    }
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'confirmed':
+        return Icons.check_circle_outline;
+      case 'cancelled':
+        return Icons.cancel_outlined;
+      case 'expired':
+        return Icons.timer_off_outlined;
+      case 'pending':
+      default:
+        return Icons.hourglass_empty;
     }
   }
 
@@ -99,7 +141,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Bookings'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -131,163 +173,345 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
             'You haven\'t booked any rooms yet.',
             style: TextStyle(fontSize: 18, color: Colors.grey),
           ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: _fetchBookings,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Refresh'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFD4A373),
+              foregroundColor: Colors.white,
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildBookingCard(Booking booking) {
-    final dateFormat = DateFormat('MMM dd, yyyy');
+    final dateFormat = DateFormat('dd MMM yyyy');
+    final resolvedStatus = _resolveStatus(booking);
+    final isRoomDeleted = booking.room == null;
+    final totalCost = booking.totalMonths != null && booking.room != null
+        ? (booking.room!.pricePerMonth * booking.totalMonths!)
+        : 0.0;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      elevation: 4,
+      elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            contentPadding: const EdgeInsets.all(16),
-            title: Text(
-              booking.room?.roomName ?? 'Room #${booking.roomId}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          // Status Header
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
             ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.calendar_today,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Move-in: ${dateFormat.format(booking.moveInDate)}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: const Color(0xFFD4A373).withValues(alpha: 0.15),
+                  child: const Icon(Icons.receipt_long, color: Color(0xFFD4A373), size: 20),
                 ),
-                if (booking.moveOutDate != null) const SizedBox(height: 4),
-                if (booking.moveOutDate != null)
-                  Row(
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Booking #${booking.bookingId ?? ''}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(resolvedStatus).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: _getStatusColor(resolvedStatus)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.calendar_today_outlined,
-                        size: 16,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(width: 8),
+                      Icon(_getStatusIcon(resolvedStatus), size: 13, color: _getStatusColor(resolvedStatus)),
+                      const SizedBox(width: 4),
                       Text(
-                        'Move-out: ${dateFormat.format(booking.moveOutDate!)}',
-                        style: const TextStyle(color: Colors.grey),
+                        _getStatusLabel(resolvedStatus),
+                        style: TextStyle(
+                          color: _getStatusColor(resolvedStatus),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
-                  ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.timer, size: 16, color: Colors.grey),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Duration: ${booking.totalMonths} months',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(
-                      booking.bookingStatus,
-                    ).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: _getStatusColor(booking.bookingStatus),
-                    ),
-                  ),
-                  child: Text(
-                    booking.bookingStatus.toUpperCase(),
-                    style: TextStyle(
-                      color: _getStatusColor(booking.bookingStatus),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
                   ),
                 ),
               ],
             ),
-            trailing:
-                booking.room?.images != null && booking.room!.images!.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      // Assuming the first image is the cover
-                      booking.room!.images![0].fullImageUrl,
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Container(width: 80, height: 80, color: Colors.grey),
-                    ),
-                  )
-                : null,
           ),
-          if (booking.bookingStatus.toLowerCase() == 'pending')
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookRoomScreen(
-                              room: booking.room!,
-                              booking: booking,
+          // Room Details Section
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Room deleted banner
+                if (isRoomDeleted) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFEE2E2),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFFCA5A5)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.delete_outline, size: 16, color: Color(0xFFDC2626)),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'This room has been removed from the system.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFFDC2626),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+                // Room name and price
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Icon(
+                            isRoomDeleted ? Icons.no_meeting_room_outlined : Icons.home,
+                            size: 20,
+                            color: isRoomDeleted ? const Color(0xFFDC2626) : Colors.grey.shade600,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              isRoomDeleted ? 'Room has been deleted' : (booking.room?.roomName ?? 'Room #${booking.roomId}'),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: isRoomDeleted ? const Color(0xFFDC2626) : null,
+                                fontStyle: isRoomDeleted ? FontStyle.italic : FontStyle.normal,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        );
-                        if (result == true) {
-                          _fetchBookings();
-                        }
-                      },
-                      icon: const Icon(Icons.edit, size: 18),
-                      label: const Text('EDIT'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3B5998),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _cancelBooking(booking.bookingId!),
-                      icon: const Icon(Icons.cancel, size: 18),
-                      label: const Text('CANCEL'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red.shade400,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    if (!isRoomDeleted)
+                      Text(
+                        '\$${booking.room?.pricePerMonth.toStringAsFixed(0) ?? '0'}/mo',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: Color(0xFFD4A373),
                         ),
                       ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Dates - Side by side
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward,
+                            size: 18,
+                            color: Colors.green.shade400,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Move-in',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            dateFormat.format(booking.moveInDate),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_back,
+                            size: 18,
+                            color: Colors.red.shade400,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Move-out',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          if (booking.moveOutDate != null)
+                            Text(
+                              dateFormat.format(booking.moveOutDate!),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            )
+                          else
+                            Text(
+                              'N/A',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade400,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Duration and Total Cost - Side by side
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.schedule,
+                            size: 18,
+                            color: Colors.orange.shade400,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Duration',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${booking.totalMonths} months',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.credit_card,
+                            size: 18,
+                            color: Colors.blue.shade400,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Total',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '\$${totalCost.toStringAsFixed(0)}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                // Action buttons — only for pending
+                if (resolvedStatus == 'pending')
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () => _cancelBooking(booking.bookingId!),
+                            icon: const Icon(Icons.close, size: 18),
+                            label: const Text('Cancel'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red.shade400,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                        if (!isRoomDeleted) ...[
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BookRoomScreen(
+                                      room: booking.room!,
+                                      booking: booking,
+                                    ),
+                                  ),
+                                );
+                                if (result == true) {
+                                  _fetchBookings();
+                                }
+                              },
+                              icon: const Icon(Icons.edit, size: 18),
+                              label: const Text('Edit'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green.shade500,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
+          ),
         ],
       ),
     );

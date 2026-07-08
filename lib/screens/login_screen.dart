@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFE0EAFC), Color(0xFFCFDEF3)],
+            colors: [Color(0xFFFEFAE0), Color(0xFFFAEDCD)],
           ),
         ),
         child: Center(
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Icon(
                     Icons.maps_home_work_rounded,
                     size: 80,
-                    color: Color(0xFF3B5998),
+                    color: Color(0xFFD4A373),
                   ),
                   const SizedBox(height: 24),
                   const Text(
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Login to your account to find the perfect room.',
+                    'Is there anything we can help you with today?',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
@@ -125,17 +125,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Color(0xFF3B5998)),
                       ),
                     ),
                   ),
@@ -203,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3B5998),
+                      backgroundColor: const Color(0xFFD4A373),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -211,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       elevation: 4,
                       shadowColor: const Color(
-                        0xFF3B5998,
+                        0xFFD4A373,
                       ).withValues(alpha: 0.5),
                     ),
                     child: _isLoading
@@ -254,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           'Register',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF3B5998),
+                            color: Color(0xFFD4A373),
                           ),
                         ),
                       ),

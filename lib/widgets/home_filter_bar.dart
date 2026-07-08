@@ -28,7 +28,7 @@ class HomeFilterBar extends StatelessWidget {
       children: [
         // Search Box Container
         Container(
-          color: const Color(0xFF3B5998),
+          color: const Color(0xFFD4A373),
           padding: const EdgeInsets.only(
             left: 16,
             right: 16,
@@ -53,7 +53,7 @@ class HomeFilterBar extends StatelessWidget {
         ),
         // Filters Container (Districts & Villages)
         Container(
-          color: const Color(0xFF3B5998),
+          color: const Color(0xFFD4A373),
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           child: Row(
             children: [
@@ -71,7 +71,7 @@ class HomeFilterBar extends StatelessWidget {
                       isExpanded: true,
                       icon: const Icon(
                         Icons.keyboard_arrow_down,
-                        color: Color(0xFF3B5998),
+                        color: Color(0xFFD4A373),
                       ),
                       items: districts.map((String district) {
                         return DropdownMenuItem<String>(
@@ -103,7 +103,7 @@ class HomeFilterBar extends StatelessWidget {
                       isExpanded: true,
                       icon: const Icon(
                         Icons.keyboard_arrow_down,
-                        color: Color(0xFF3B5998),
+                        color: Color(0xFFD4A373),
                       ),
                       items: villages.map((String village) {
                         return DropdownMenuItem<String>(

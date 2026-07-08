@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/room_model.dart';
 import '../models/booking_model.dart';
@@ -23,7 +24,6 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
   DateTime? _selectedDate; // Move-in
   DateTime? _moveOutDate;
   final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _messageController = TextEditingController();
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
   @override
   void dispose() {
     _durationController.dispose();
-    _messageController.dispose();
+
     super.dispose();
   }
 
@@ -102,7 +102,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
     return Theme(
       data: Theme.of(context).copyWith(
         colorScheme: const ColorScheme.light(
-          primary: Color(0xFF3B5998),
+          primary: Color(0xFFD4A373),
           onPrimary: Colors.white,
           onSurface: Colors.black,
         ),
@@ -118,10 +118,10 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
     final bool isEditMode = widget.booking != null;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
         title: Text(isEditMode ? 'Edit Booking' : 'Book This Room'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -154,10 +154,19 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                         child:
                             widget.room.images != null &&
                                 widget.room.images!.isNotEmpty
-                            ? Image.network(
-                                widget.room.images!.first.fullImageUrl,
+                            ? CachedNetworkImage(
+                                imageUrl: widget.room.images!.first.fullImageUrl,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey.shade200,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Color(0xFFD4A373),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
                                     const Icon(
                                       Icons.broken_image,
                                       color: Colors.grey,
@@ -187,7 +196,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF3B5998),
+                                color: Color(0xFFD4A373),
                               ),
                             ),
                           ],
@@ -321,33 +330,6 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Message
-              const Text(
-                'Message to Owner (Optional)',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _messageController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  hintText: 'Any special requests or questions...',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
-                ),
-              ),
               const SizedBox(height: 32),
 
               // Submit Button
@@ -423,7 +405,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                         }
                       },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF3B5998),
+                  backgroundColor: const Color(0xFFD4A373),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

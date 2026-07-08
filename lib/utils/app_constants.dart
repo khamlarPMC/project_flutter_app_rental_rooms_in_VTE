@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 class AppApi {
   AppApi._(); // protect create a instance
 
-  /// Host ของ Laravel API ตาม platform
+  /// Host of the Laravel API based on platform
   static const String _dartDefinedBaseUrl = String.fromEnvironment('BASE_URL', defaultValue: '');
 
   static String get host {
@@ -26,7 +26,7 @@ class AppApi {
     return 'http://127.0.0.1:8080';
   }
 
-  /// Base URL ของ Laravel API
+  /// Base URL of the Laravel API
   static String get baseUrl => '$host/api';
 
   // Endpoints - Authentication
@@ -52,23 +52,24 @@ class AppApi {
 }
 
 // ------------------------------------------------------------
-//  COLORS (Design System)
+//  COLORS (Design System) — Warm Cozy Minimalist
 // ------------------------------------------------------------
 class AppColors {
-  AppColors._(); // ป้องกันการสร้าง instance
+  AppColors._(); // prevent instantiation
 
   // Primary Brand Color
-  static const Color primary = Color(0xFF3B5998);
+  static const Color primary = Color(0xFFD4A373);
+  static const Color secondary = Color(0xFFFAEDCD);
 
   // Background Colors
-  static const Color background = Color(0xFFF5F7FA);
+  static const Color background = Color(0xFFFEFAE0);
   static const Color backgroundCard = Colors.white;
-  static const Color backgroundLight = Color(0xFFF8FAFC);
-  static const Color backgroundField = Color(0xFFF8FAFC);
+  static const Color backgroundLight = Color(0xFFFAEDCD);
+  static const Color backgroundField = Color(0xFFFFFBF0);
 
-  // Gradient Colors (ใช้ใน Login / Register)
-  static const Color gradientStart = Color(0xFFE0EAFC);
-  static const Color gradientEnd = Color(0xFFCFDEF3);
+  // Gradient Colors (used in Login / Register)
+  static const Color gradientStart = Color(0xFFFEFAE0);
+  static const Color gradientEnd = Color(0xFFFAEDCD);
 
   // Text Colors
   static const Color textDark = Color(0xFF1E293B);
@@ -99,7 +100,7 @@ class AppSpacing {
   static const double xxl = 24.0;
   static const double xxxl = 32.0;
 
-  /// Padding ทั่วไปของ Screen
+  /// General screen padding
   static const EdgeInsets screenPadding = EdgeInsets.all(24.0);
   static const EdgeInsets screenPaddingH = EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0);
 

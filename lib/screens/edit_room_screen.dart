@@ -101,6 +101,29 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Save Changes'),
+        content: const Text('Are you sure you want to save the changes to this room?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFD4A373),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+
     setState(() => _isLoading = true);
 
     try {
@@ -159,10 +182,10 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
         title: const Text('Edit Room'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -272,6 +295,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<String>(
+                            isExpanded: true,
                             initialValue: _selectedDistrict,
                             decoration: InputDecoration(
                               filled: true,
@@ -287,7 +311,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                             items: districtVillages.keys.map((String district) {
                               return DropdownMenuItem<String>(
                                 value: district,
-                                child: Text(district),
+                                child: Text(district, overflow: TextOverflow.ellipsis),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -304,6 +328,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             key: ValueKey('village_dropdown_$_selectedDistrict'),
+                            isExpanded: true,
                             initialValue: _selectedVillage,
                             decoration: InputDecoration(
                               filled: true,
@@ -319,7 +344,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                             items: districtVillages[_selectedDistrict]!.map((String village) {
                               return DropdownMenuItem<String>(
                                 value: village,
-                                child: Text(village),
+                                child: Text(village, overflow: TextOverflow.ellipsis),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -436,10 +461,10 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                                           },
                                           deleteIconColor: Colors.red.shade400,
                                           backgroundColor: const Color(
-                                            0xFF3B5998,
+                                            0xFFD4A373,
                                           ).withValues(alpha: 0.1),
                                           labelStyle: const TextStyle(
-                                            color: Color(0xFF3B5998),
+                                            color: Color(0xFFD4A373),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         );
@@ -488,7 +513,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                     ElevatedButton(
                       onPressed: _isLoading ? null : _saveChanges,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3B5998),
+                        backgroundColor: const Color(0xFFD4A373),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(

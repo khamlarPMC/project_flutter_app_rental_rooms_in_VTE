@@ -35,10 +35,10 @@ class _MyRoomsViewState extends State<MyRoomsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
         title: const Text('My Rooms'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [

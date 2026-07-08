@@ -14,9 +14,12 @@ class RoomImage {
   });
 
   factory RoomImage.fromJson(Map<String, dynamic> json) {
+    final rawUrl = (json['image_url'] ?? json['path'] ?? json['image'] ?? '').toString().trim();
+    // Reject pure-numeric strings (e.g. "0") — they are bad/corrupt DB values
+    final isNumeric = RegExp(r'^\d+$').hasMatch(rawUrl);
     return RoomImage(
       imageId: json['image_id'] ?? json['id'],
-      imageUrl: json['image_url'] ?? json['path'] ?? json['image'] ?? '',
+      imageUrl: isNumeric ? '' : rawUrl,
       roomId: json['room_id'],
       isMain: json['is_main'] == 1 || json['is_main'] == true,
     );

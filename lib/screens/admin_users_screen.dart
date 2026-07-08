@@ -57,7 +57,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manage Users'),
-        backgroundColor: const Color(0xFF3B5998),
+        backgroundColor: const Color(0xFFD4A373),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -76,7 +76,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: const Color(0xFF3B5998),
+                          backgroundColor: const Color(0xFFD4A373),
                           child: Text(user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white)),
                         ),
                         title: Text(user.name, style: const TextStyle(fontWeight: FontWeight.bold)),
