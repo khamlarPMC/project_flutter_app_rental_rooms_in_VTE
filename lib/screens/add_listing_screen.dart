@@ -6,6 +6,7 @@ import '../models/address_model.dart';
 import '../models/amenity_model.dart';
 import '../services/room_service.dart';
 import '../utils/district_villages.dart';
+import '../l10n/app_localizations.dart';
 
 class AddListingScreen extends StatefulWidget {
   const AddListingScreen({super.key});
@@ -93,8 +94,8 @@ class _AddListingScreenState extends State<AddListingScreen> {
       if (result != null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Listing created successfully!'),
+            SnackBar(
+              content: Text(context.tr('listingCreatedSuccess')),
               backgroundColor: Colors.green,
             ),
           );
@@ -127,7 +128,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
-        title: const Text('Add New Listing'),
+        title: Text(context.tr('addNewRoom')),
         backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -154,9 +155,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     const SizedBox(height: 24),
 
                     // Title Field
-                    const Text(
-                      'Listing Title',
-                      style: TextStyle(
+                    Text(
+                      context.tr('roomName'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -166,7 +167,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     TextFormField(
                       controller: _titleController,
                       decoration: InputDecoration(
-                        hintText: 'e.g., Cozy Modern Apartment',
+                        hintText: context.tr('roomName'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -179,15 +180,15 @@ class _AddListingScreenState extends State<AddListingScreen> {
                         ),
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter a title'
+                          ? context.tr('pleaseEnterTitle')
                           : null,
                     ),
                     const SizedBox(height: 20),
 
                     // Price Field
-                    const Text(
-                      'Monthly Price (\$)',
-                      style: TextStyle(
+                    Text(
+                      context.tr('pricePerMonth'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -212,14 +213,14 @@ class _AddListingScreenState extends State<AddListingScreen> {
                         ),
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter a price'
+                          ? context.tr('pleaseEnterPrice')
                           : null,
                     ),
                     const SizedBox(height: 20),
 
                     // Location Dropdowns
-                    const Text(
-                      'Location',
+                    Text(
+                      context.tr('location'),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -297,9 +298,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     const SizedBox(height: 20),
 
                     // Amenities Section
-                    const Text(
-                      'Amenities',
-                      style: TextStyle(
+                    Text(
+                      context.tr('selectAmenities'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -340,7 +341,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                                       initialValue:
                                           _selectedAmenityDropdownValue,
                                       decoration: InputDecoration(
-                                        hintText: 'Select an amenity',
+                                        hintText: context.tr('selectAnAmenity'),
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
@@ -410,9 +411,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     const SizedBox(height: 20),
 
                     // Description Field
-                    const Text(
-                      'Description',
-                      style: TextStyle(
+                    Text(
+                      context.tr('description'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),
@@ -423,7 +424,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                       controller: _descriptionController,
                       maxLines: 4,
                       decoration: InputDecoration(
-                        hintText: 'Describe the room, facilities, and rules...',
+                        hintText: context.tr('descriptionHint'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -436,7 +437,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                         ),
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter a description'
+                          ? context.tr('pleaseEnterDescription')
                           : null,
                     ),
                     const SizedBox(height: 32),
@@ -453,8 +454,8 @@ class _AddListingScreenState extends State<AddListingScreen> {
                         ),
                         elevation: 2,
                       ),
-                      child: const Text(
-                        'PUBLISH LISTING',
+                      child: Text(
+                        context.tr('publishListing').toUpperCase(),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

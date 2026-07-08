@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/room_model.dart';
 import '../screens/edit_room_screen.dart';
 import '../services/room_service.dart';
+import '../l10n/app_localizations.dart';
 
 class OwnerRoomCard extends StatefulWidget {
   final Room room;
@@ -19,15 +20,16 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
   final RoomService _roomService = RoomService();
 
   Future<void> _confirmEdit() async {
+    final l = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Edit Room'),
-        content: const Text('Do you want to edit this room?'),
+        title: Text(l.tr('edit')),
+        content: Text(l.tr('doYouWantToEdit')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l.tr('cancel')),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -35,7 +37,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Edit'),
+            child: Text(l.tr('edit')),
           ),
         ],
       ),
@@ -57,14 +59,13 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
       final isPendingDeletion =
           widget.room.roomStatus.toLowerCase() == 'pending_deletion';
 
+      final l = AppLocalizations.of(context);
       if (isPendingDeletion) {
         await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Already Pending'),
-            content: const Text(
-              'A deletion request has already been sent for this room.\nPlease wait for admin approval.',
-            ),
+            title: Text(l.tr('alreadyPending')),
+            content: Text(l.tr('alreadyPendingMsg')),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.pop(ctx),
@@ -72,7 +73,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                   backgroundColor: const Color(0xFFD4A373),
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('OK'),
+                child: Text(l.tr('ok')),
               ),
             ],
           ),
@@ -83,14 +84,12 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
       final confirm = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Request Room Deletion'),
-          content: const Text(
-            'This will send a deletion request to the admin.\nThe room will be deleted only after admin approval.',
-          ),
+          title: Text(l.tr('requestRoomDeletion')),
+          content: Text(l.tr('deletionRequestSentMsg')),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(l.tr('cancel')),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(ctx, true),
@@ -98,7 +97,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Send Request'),
+              child: Text(l.tr('sendRequest')),
             ),
           ],
         ),
@@ -109,12 +108,10 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
           await _roomService.requestDeletion(widget.room.roomId!);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Deletion request sent. Waiting for admin approval.',
-                ),
+              SnackBar(
+                content: Text(AppLocalizations.of(context).tr('deletionRequestSent')),
                 backgroundColor: Colors.orange,
-                duration: Duration(seconds: 4),
+                duration: const Duration(seconds: 4),
               ),
             );
             widget.onRefresh?.call();
@@ -124,7 +121,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
             await showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
-                title: const Text('Request Failed'),
+                title: Text(AppLocalizations.of(context).tr('requestFailed')),
                 content: Text(e.toString()),
                 actions: [
                   ElevatedButton(
@@ -133,7 +130,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('OK'),
+                    child: Text(AppLocalizations.of(context).tr('ok')),
                   ),
                 ],
               ),
@@ -266,7 +263,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Pending Deletion',
+                            context.tr('pendingDeletion'),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -302,7 +299,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Pending Approval',
+                            context.tr('pendingApproval'),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -335,7 +332,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         ),
                       ),
                       child: Text(
-                        isAvailable ? 'Available' : 'Occupied',
+                        isAvailable ? context.tr('available') : context.tr('occupied'),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -389,7 +386,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                     Text(
                       room.address != null
                           ? '${room.address!.village}, ${room.address!.district}'
-                          : 'Location not set',
+                          : context.tr('notSet'),
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade700,
@@ -421,7 +418,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Deletion request sent. Waiting for admin approval.',
+                            context.tr('deletionRequestSent'),
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.red.shade700,
@@ -445,7 +442,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         color: isPendingDeletion ? Colors.grey : Colors.blue,
                       ),
                       label: Text(
-                        'Edit',
+                        context.tr('edit'),
                         style: TextStyle(
                           color: isPendingDeletion ? Colors.grey : Colors.blue,
                         ),
@@ -460,7 +457,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         color: Colors.red,
                       ),
                       label: Text(
-                        isPendingDeletion ? 'Pending...' : 'Delete',
+                        isPendingDeletion ? context.tr('pendingDots') : context.tr('delete'),
                         style: const TextStyle(color: Colors.red),
                       ),
                     ),

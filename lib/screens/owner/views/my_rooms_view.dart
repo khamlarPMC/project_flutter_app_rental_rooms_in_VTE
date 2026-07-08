@@ -4,6 +4,7 @@ import 'package:app_rental_room/services/room_service.dart';
 import 'package:app_rental_room/widgets/owner_room_card.dart';
 import 'package:app_rental_room/screens/detail_user_screen.dart';
 import 'package:app_rental_room/screens/login_screen.dart';
+import 'package:app_rental_room/l10n/app_localizations.dart';
 
 class MyRoomsView extends StatefulWidget {
   const MyRoomsView({super.key});
@@ -37,7 +38,7 @@ class _MyRoomsViewState extends State<MyRoomsView> {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
-        title: const Text('My Rooms'),
+        title: Text(context.tr('myRooms')),
         backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -89,18 +90,18 @@ class _MyRoomsViewState extends State<MyRoomsView> {
                             color: Colors.grey.shade400,
                           ),
                           const SizedBox(height: 16),
-                          const Text(
-                            'You haven\'t added any rooms yet.',
-                            style: TextStyle(
+                          Text(
+                            context.tr('noRoomsYet'),
+                            style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black54,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Tap the + button to add your first room.',
-                            style: TextStyle(
+                          Text(
+                            context.tr('addFirstRoom'),
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.black38,
                             ),

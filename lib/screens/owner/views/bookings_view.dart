@@ -3,6 +3,7 @@ import 'package:app_rental_room/widgets/booking_request_card.dart';
 import 'package:app_rental_room/screens/detail_user_screen.dart';
 import 'package:app_rental_room/screens/login_screen.dart';
 import 'package:app_rental_room/services/room_service.dart';
+import 'package:app_rental_room/l10n/app_localizations.dart';
 
 class BookingsView extends StatefulWidget {
   const BookingsView({super.key});
@@ -36,7 +37,7 @@ class _BookingsViewState extends State<BookingsView> {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
-        title: const Text('Bookings'),
+        title: Text(context.tr('bookings')),
         backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -68,7 +69,7 @@ class _BookingsViewState extends State<BookingsView> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _bookings.isEmpty
-                ? const Center(child: Text('No booking requests found.'))
+                ? Center(child: Text(context.tr('noBookingRequestsFound')))
                 : ListView.builder(
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(16),

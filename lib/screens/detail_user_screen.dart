@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../utils/app_constants.dart';
+import '../l10n/app_localizations.dart';
 
 class DetailUserScreen extends StatefulWidget {
   final String initialRole;
@@ -122,12 +123,12 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
 
       if (updatedUser != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Profile updated successfully!'),
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 8),
+                Text(AppLocalizations.of(context).tr('profileUpdated')),
               ],
             ),
             backgroundColor: Colors.green,
@@ -174,9 +175,9 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
-        title: const Text(
-          'User Profile',
-          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+        title: Text(
+          context.tr('userProfile'),
+          style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
         ),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
@@ -236,24 +237,24 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
 
                   // Section: Personal Info Card
                   _buildCard(
-                    title: 'Personal Details',
+                    title: context.tr('personalDetails'),
                     icon: Icons.person_outline,
                     children: [
                       _buildTextField(
                         controller: _nameController,
-                        label: 'Full Name',
-                        hint: 'Enter your full name',
+                        label: context.tr('fullName'),
+                        hint: context.tr('fullName'),
                         icon: Icons.person,
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                            ? 'Name is required'
+                            ? context.tr('nameRequired')
                             : null,
                       ),
                       const SizedBox(height: 16),
                       _buildTextField(
                         controller: _emailController,
-                        label: 'Email Address',
-                        hint: 'Your email address',
+                        label: context.tr('emailAddress'),
+                        hint: context.tr('emailAddress'),
                         icon: Icons.email_outlined,
                         enabled: false,
                       ),
@@ -264,7 +265,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
                             flex: 3,
                             child: _buildTextField(
                               controller: _phoneController,
-                              label: 'Phone Number',
+                              label: context.tr('phoneNumber'),
                               hint: 'e.g. 020...',
                               icon: Icons.phone_outlined,
                               keyboardType: TextInputType.phone,
@@ -275,15 +276,15 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
                             flex: 2,
                             child: _buildTextField(
                               controller: _ageController,
-                              label: 'Age',
-                              hint: 'Age',
+                              label: context.tr('age'),
+                              hint: context.tr('age'),
                               icon: Icons.calendar_today_outlined,
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value != null && value.isNotEmpty) {
                                   final age = int.tryParse(value);
                                   if (age == null || age <= 0 || age > 120) {
-                                    return 'Invalid age';
+                                    return context.tr('invalidAge');
                                   }
                                 }
                                 return null;
@@ -293,34 +294,34 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _buildGenderDropdown(),
+                      _buildGenderDropdown(context),
                     ],
                   ),
                   const SizedBox(height: 20),
 
                   // Section: Address Info Card
                   _buildCard(
-                    title: 'Address Information',
+                    title: context.tr('addressInformation'),
                     icon: Icons.location_on_outlined,
                     children: [
                       _buildTextField(
                         controller: _villageController,
-                        label: 'Village',
-                        hint: 'Enter village name',
+                        label: context.tr('village'),
+                        hint: context.tr('village'),
                         icon: Icons.home_outlined,
                       ),
                       const SizedBox(height: 16),
                       _buildTextField(
                         controller: _districtController,
-                        label: 'District',
-                        hint: 'Enter district name',
+                        label: context.tr('district'),
+                        hint: context.tr('district'),
                         icon: Icons.domain,
                       ),
                       const SizedBox(height: 16),
                       _buildTextField(
                         controller: _provinceController,
-                        label: 'Province',
-                        hint: 'Enter province name',
+                        label: context.tr('province'),
+                        hint: context.tr('province'),
                         icon: Icons.map_outlined,
                       ),
                     ],
@@ -334,8 +335,8 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _isLoading ? null : _saveProfile,
                       icon: const Icon(Icons.save_outlined),
-                      label: const Text(
-                        'SAVE PROFILE',
+                      label: Text(
+                        context.tr('saveProfile').toUpperCase(),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -360,28 +361,28 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
           if (_isLoading)
             Container(
               color: Colors.black.withValues(alpha: 0.3),
-              child: const Center(
+              child: Center(
                 child: Card(
                   elevation: 4,
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(AppRadius.xl),
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CircularProgressIndicator(
+                        const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
                             AppColors.primary,
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Text(
-                          'Updating Profile...',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          AppLocalizations.of(context).tr('updatingProfile'),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -516,13 +517,14 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
     );
   }
 
-  Widget _buildGenderDropdown() {
+  Widget _buildGenderDropdown(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Gender',
-          style: TextStyle(
+        Text(
+          l.tr('gender'),
+          style: const TextStyle(
             fontSize: AppFontSize.sm,
             fontWeight: FontWeight.bold,
             color: AppColors.textSecondary,
@@ -535,7 +537,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
               ? _gender
               : null,
           hint: Text(
-            'Select Gender',
+            l.tr('selectGender'),
             style: TextStyle(
               color: Colors.grey.shade400,
               fontSize: AppFontSize.md,

@@ -4,6 +4,7 @@ import '../models/room_model.dart';
 import '../models/booking_model.dart';
 import '../services/room_service.dart';
 import '../services/booking_service.dart';
+import '../l10n/app_localizations.dart';
 
 class BookRoomScreen extends StatefulWidget {
   final Room room;
@@ -68,7 +69,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
   Future<void> _selectMoveOutDate(BuildContext context) async {
     if (_selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select Move-in date first')),
+        SnackBar(content: Text(context.tr('pleaseSelectMoveInFirst'))),
       );
       return;
     }
@@ -120,7 +121,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
-        title: Text(isEditMode ? 'Edit Booking' : 'Book This Room'),
+        title: Text(isEditMode ? context.tr('editBooking') : context.tr('bookThisRoom')),
         backgroundColor: const Color(0xFFD4A373),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -209,9 +210,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
               const SizedBox(height: 24),
 
               // Move-in Date
-              const Text(
-                'Move-in Date',
-                style: TextStyle(
+              Text(
+                context.tr('moveInDate'),
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF333333),
@@ -236,7 +237,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                       const SizedBox(width: 12),
                       Text(
                         _selectedDate == null
-                            ? 'Select a date'
+                            ? context.tr('selectADate')
                             : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
                         style: TextStyle(
                           fontSize: 16,
@@ -252,9 +253,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
               const SizedBox(height: 20),
 
               // Move-out Date
-              const Text(
-                'Move-out Date',
-                style: TextStyle(
+              Text(
+                context.tr('moveOutDate'),
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF333333),
@@ -282,7 +283,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                       const SizedBox(width: 12),
                       Text(
                         _moveOutDate == null
-                            ? 'Select a date'
+                            ? context.tr('selectADate')
                             : '${_moveOutDate!.day}/${_moveOutDate!.month}/${_moveOutDate!.year}',
                         style: TextStyle(
                           fontSize: 16,
@@ -298,9 +299,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
               const SizedBox(height: 20),
 
               // Duration
-              const Text(
-                'Duration (Months)',
-                style: TextStyle(
+              Text(
+                context.tr('durationMonths'),
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF333333),
@@ -311,7 +312,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                 controller: _durationController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  hintText: 'Auto-calculated',
+                  hintText: context.tr('autoCalculated'),
                   prefixIcon: const Icon(Icons.timer_outlined),
                   filled: true,
                   fillColor: Colors.grey.shade200,
@@ -325,7 +326,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                   ),
                 ),
                 validator: (value) => value == null || value.isEmpty
-                    ? 'Please select dates'
+                    ? context.tr('pleaseSelectDates')
                     : null,
               ),
               const SizedBox(height: 20),
@@ -374,8 +375,8 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                                 SnackBar(
                                   content: Text(
                                     isEditMode
-                                        ? 'Booking updated successfully!'
-                                        : 'Booking request sent successfully!',
+                                        ? context.tr('bookingUpdatedSuccess')
+                                        : context.tr('bookingRequestSentSuccess'),
                                   ),
                                   backgroundColor: Colors.green,
                                 ),
@@ -386,8 +387,8 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                               ); // Return true to indicate change
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Operation failed.'),
+                                SnackBar(
+                                  content: Text(context.tr('operationFailed')),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -396,10 +397,8 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                         } else if (_selectedDate == null ||
                             _moveOutDate == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Please select both Move-in and Move-out dates',
-                              ),
+                            SnackBar(
+                              content: Text(context.tr('pleaseSelectBothDates')),
                             ),
                           );
                         }
@@ -416,7 +415,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                 child: _isSubmitting
                     ? const CircularProgressIndicator(color: Colors.white)
                     : Text(
-                        isEditMode ? 'UPDATE BOOKING' : 'CONFIRM BOOKING',
+                        isEditMode ? context.tr('updateBookingBtn') : context.tr('confirmBookingBtn'),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
