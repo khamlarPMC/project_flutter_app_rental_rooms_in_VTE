@@ -6,6 +6,7 @@ import '../models/address_model.dart';
 import '../models/amenity_model.dart';
 import '../services/room_service.dart';
 import '../utils/district_villages.dart';
+import '../providers/language_provider.dart';
 import '../l10n/app_localizations.dart';
 
 class EditRoomScreen extends StatefulWidget {
@@ -183,6 +184,8 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
       _selectedVillage = districtVillages[_selectedDistrict]!.first;
     }
 
+    final isLao = LanguageProvider.instance.isLao;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFEFAE0),
       appBar: AppBar(
@@ -298,7 +301,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             isExpanded: true,
-                            initialValue: _selectedDistrict,
+                            value: _selectedDistrict,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -313,7 +316,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                             items: districtVillages.keys.map((String district) {
                               return DropdownMenuItem<String>(
                                 value: district,
-                                child: Text(district, overflow: TextOverflow.ellipsis),
+                                child: Text(getDistrictDisplay(district, isLao), overflow: TextOverflow.ellipsis),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -331,7 +334,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                           child: DropdownButtonFormField<String>(
                             key: ValueKey('village_dropdown_$_selectedDistrict'),
                             isExpanded: true,
-                            initialValue: _selectedVillage,
+                            value: _selectedVillage,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -346,7 +349,7 @@ class _EditRoomScreenState extends State<EditRoomScreen> {
                             items: districtVillages[_selectedDistrict]!.map((String village) {
                               return DropdownMenuItem<String>(
                                 value: village,
-                                child: Text(village, overflow: TextOverflow.ellipsis),
+                                child: Text(getVillageDisplay(village, isLao), overflow: TextOverflow.ellipsis),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {

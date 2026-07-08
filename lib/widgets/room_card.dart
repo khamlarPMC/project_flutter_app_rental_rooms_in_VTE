@@ -4,6 +4,9 @@ import '../models/room_model.dart';
 import '../screens/detail_room_screen.dart';
 import '../screens/book_room_screen.dart';
 import '../services/auth_service.dart';
+import '../l10n/app_localizations.dart';
+import '../providers/language_provider.dart';
+import '../utils/district_villages.dart';
 
 class RoomCard extends StatelessWidget {
   final Room room;
@@ -12,10 +15,27 @@ class RoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine status color and text
+    final l = AppLocalizations.of(context);
+    final isLao = LanguageProvider.instance.isLao;
+
     final bool isAvailable = room.roomStatus.toLowerCase() == 'available';
     final Color statusColor = isAvailable ? Colors.green : Colors.red;
-    final String statusText = isAvailable ? 'Available' : 'Occupied';
+    final String statusText = isAvailable ? l.tr('available') : l.tr('occupied');
+
+    String locationText = l.tr('notSet');
+    if (room.address != null) {
+      final village = room.address!.village ?? '';
+      final district = room.address!.district ?? '';
+      final villageDisplay = village.isNotEmpty ? getVillageDisplay(village, isLao) : '';
+      final districtDisplay = district.isNotEmpty ? getDistrictDisplay(district, isLao) : '';
+      if (villageDisplay.isNotEmpty && districtDisplay.isNotEmpty) {
+        locationText = '$villageDisplay, $districtDisplay';
+      } else if (districtDisplay.isNotEmpty) {
+        locationText = districtDisplay;
+      } else if (villageDisplay.isNotEmpty) {
+        locationText = villageDisplay;
+      }
+    }
 
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
@@ -49,8 +69,6 @@ class RoomCard extends StatelessWidget {
                     itemBuilder: (context, idx) {
                       if (room.images != null && room.images!.isNotEmpty) {
                         final imgUrl = room.images![idx].fullImageUrl;
-                        debugPrint('RoomCard: loading image -> $imgUrl');
-
                         if (imgUrl.isEmpty) {
                           return Container(
                             color: Colors.grey.shade200,
@@ -61,7 +79,6 @@ class RoomCard extends StatelessWidget {
                             ),
                           );
                         }
-
                         return CachedNetworkImage(
                           imageUrl: imgUrl,
                           fit: BoxFit.cover,
@@ -74,26 +91,19 @@ class RoomCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          errorWidget: (context, url, error) {
-                            debugPrint('RoomCard image error: $error');
-                            return Container(
-                              color: Colors.grey.shade200,
-                              child: const Icon(
-                                Icons.broken_image,
-                                size: 50,
-                                color: Colors.grey,
-                              ),
-                            );
-                          },
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(
+                              Icons.broken_image,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                          ),
                         );
                       }
                       return Container(
                         color: Colors.grey.shade200,
-                        child: const Icon(
-                          Icons.image,
-                          size: 60,
-                          color: Colors.grey,
-                        ),
+                        child: const Icon(Icons.image, size: 60, color: Colors.grey),
                       );
                     },
                   ),
@@ -102,10 +112,7 @@ class RoomCard extends StatelessWidget {
                     top: 12,
                     left: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: statusColor.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(8),
@@ -125,10 +132,7 @@ class RoomCard extends StatelessWidget {
                     top: 12,
                     right: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFAEDCD).withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(12),
@@ -137,7 +141,7 @@ class RoomCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        '\$${room.pricePerMonth.toStringAsFixed(0)}/mo',
+                        '\$${room.pricePerMonth.toStringAsFixed(0)}${l.tr('perMonth')}',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -166,19 +170,13 @@ class RoomCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(
-                        Icons.location_on,
-                        size: 18,
-                        color: Colors.grey.shade600,
-                      ),
+                      Icon(Icons.location_on, size: 18, color: Colors.grey.shade600),
                       const SizedBox(width: 4),
-                      Text(
-                        room.address != null
-                            ? '${room.address!.village}, ${room.address!.district}'
-                            : 'Location not set',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey.shade700,
+                      Expanded(
+                        child: Text(
+                          locationText,
+                          style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -187,14 +185,10 @@ class RoomCard extends StatelessWidget {
                   if (room.owner != null)
                     Row(
                       children: [
-                        Icon(
-                          Icons.person,
-                          size: 18,
-                          color: Colors.grey.shade600,
-                        ),
+                        Icon(Icons.person, size: 18, color: Colors.grey.shade600),
                         const SizedBox(width: 4),
                         Text(
-                          'Owner: ${room.owner!.name}',
+                          '${l.tr('owner')}: ${room.owner!.name}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey.shade600,
@@ -214,12 +208,11 @@ class RoomCard extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          BookRoomScreen(room: room),
+                                      builder: (context) => BookRoomScreen(room: room),
                                     ),
                                   );
                                 }
-                              : null, // Disable button if occupied
+                              : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isAvailable
                                 ? const Color(0xFFD4A373)
@@ -234,7 +227,7 @@ class RoomCard extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            isAvailable ? 'Book Now' : 'Occupied',
+                            isAvailable ? l.tr('bookNow') : l.tr('occupied'),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),

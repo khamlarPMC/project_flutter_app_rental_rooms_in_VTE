@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/language_provider.dart';
+import '../utils/district_villages.dart';
 
 class HomeFilterBar extends StatelessWidget {
   final TextEditingController searchController;
   final List<String> districts;
   final List<String> villages;
-  final String selectedDistrict;
-  final String selectedVillage;
+  final String? selectedDistrict;
+  final String? selectedVillage;
   final Function(String) onSearchChanged;
   final Function(String?) onDistrictChanged;
   final Function(String?) onVillageChanged;
@@ -25,9 +27,12 @@ class HomeFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final isLao = LanguageProvider.instance.isLao;
+
     return Column(
       children: [
-        // Search Box Container
+        // Search Box
         Container(
           color: const Color(0xFFD4A373),
           padding: const EdgeInsets.only(
@@ -40,7 +45,7 @@ class HomeFilterBar extends StatelessWidget {
             controller: searchController,
             onChanged: onSearchChanged,
             decoration: InputDecoration(
-              hintText: context.tr('searchForRooms'),
+              hintText: l.tr('searchForRooms'),
               prefixIcon: const Icon(Icons.search, color: Colors.grey),
               filled: true,
               fillColor: Colors.white,
@@ -52,7 +57,7 @@ class HomeFilterBar extends StatelessWidget {
             ),
           ),
         ),
-        // Filters Container (Districts & Villages)
+        // District & Village Dropdowns
         Container(
           color: const Color(0xFFD4A373),
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -67,23 +72,33 @@ class HomeFilterBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
+                    child: DropdownButton<String?>(
                       value: selectedDistrict,
                       isExpanded: true,
                       icon: const Icon(
                         Icons.keyboard_arrow_down,
                         color: Color(0xFFD4A373),
                       ),
-                      items: districts.map((String district) {
-                        return DropdownMenuItem<String>(
-                          value: district,
+                      items: [
+                        DropdownMenuItem<String?>(
+                          value: null,
                           child: Text(
-                            district,
+                            l.tr('allDistricts'),
                             style: const TextStyle(fontSize: 14),
                             overflow: TextOverflow.ellipsis,
                           ),
-                        );
-                      }).toList(),
+                        ),
+                        ...districts.map((String district) {
+                          return DropdownMenuItem<String?>(
+                            value: district,
+                            child: Text(
+                              getDistrictDisplay(district, isLao),
+                              style: const TextStyle(fontSize: 14),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }),
+                      ],
                       onChanged: onDistrictChanged,
                     ),
                   ),
@@ -99,23 +114,34 @@ class HomeFilterBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
+                    child: DropdownButton<String?>(
+                      key: ValueKey('village_$selectedDistrict'),
                       value: selectedVillage,
                       isExpanded: true,
                       icon: const Icon(
                         Icons.keyboard_arrow_down,
                         color: Color(0xFFD4A373),
                       ),
-                      items: villages.map((String village) {
-                        return DropdownMenuItem<String>(
-                          value: village,
+                      items: [
+                        DropdownMenuItem<String?>(
+                          value: null,
                           child: Text(
-                            village,
+                            l.tr('allVillages'),
                             style: const TextStyle(fontSize: 14),
                             overflow: TextOverflow.ellipsis,
                           ),
-                        );
-                      }).toList(),
+                        ),
+                        ...villages.map((String village) {
+                          return DropdownMenuItem<String?>(
+                            value: village,
+                            child: Text(
+                              getVillageDisplay(village, isLao),
+                              style: const TextStyle(fontSize: 14),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }),
+                      ],
                       onChanged: onVillageChanged,
                     ),
                   ),

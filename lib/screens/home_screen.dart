@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../models/room_model.dart';
 import '../services/room_service.dart';
 import '../widgets/home_filter_bar.dart';
@@ -20,23 +20,22 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Room> _rooms = [];
   bool _isLoading = true;
 
-  String _selectedDistrict = 'All Districts';
-  String _selectedVillage = 'All Villages';
+  String? _selectedDistrict; // null = All Districts
+  String? _selectedVillage;  // null = All Villages
   String _searchQuery = '';
 
-  List<String> get _districts => ['All Districts', ...districtVillages.keys];
+  List<String> get _districts => districtVillages.keys.toList();
 
   List<String> get _villageOptions {
-    if (_selectedDistrict == 'All Districts') {
+    if (_selectedDistrict == null) {
       final allVillages = districtVillages.values
           .expand((villages) => villages)
           .toSet()
           .toList();
       allVillages.sort();
-      return ['All Villages', ...allVillages];
+      return allVillages;
     }
-
-    return ['All Villages', ...?districtVillages[_selectedDistrict]];
+    return districtVillages[_selectedDistrict] ?? [];
   }
 
   List<Room> get _filteredRooms {
@@ -57,12 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
           village.contains(query);
 
       final matchesDistrict =
-          _selectedDistrict == 'All Districts' ||
-          district == _selectedDistrict.toLowerCase();
+          _selectedDistrict == null ||
+          district == _selectedDistrict!.toLowerCase();
 
       final matchesVillage =
-          _selectedVillage == 'All Villages' ||
-          village == _selectedVillage.toLowerCase();
+          _selectedVillage == null ||
+          village == _selectedVillage!.toLowerCase();
 
       return matchesSearch && matchesDistrict && matchesVillage;
     }).toList();
@@ -146,19 +145,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               onDistrictChanged: (newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    _selectedDistrict = newValue;
-                    _selectedVillage = 'All Villages';
-                  });
-                }
+                setState(() {
+                  _selectedDistrict = newValue;
+                  _selectedVillage = null;
+                });
               },
               onVillageChanged: (newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    _selectedVillage = newValue;
-                  });
-                }
+                setState(() {
+                  _selectedVillage = newValue;
+                });
               },
             ),
             RoomListView(rooms: _filteredRooms, isLoading: _isLoading),
