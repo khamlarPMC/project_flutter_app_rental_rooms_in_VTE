@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../providers/language_provider.dart';
+import '../utils/app_constants.dart';
 
 class LanguageToggleButton extends StatefulWidget {
   final Color? color;
@@ -40,7 +41,7 @@ class _LanguageToggleButtonState extends State<LanguageToggleButton> {
       onSelected: (code) {
         LanguageProvider.instance.setLocale(Locale(code));
       },
-      color: Colors.white,
+      color: AppColors.backgroundCard,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       offset: const Offset(0, 40),
       itemBuilder: (context) => _languages.map((lang) {
@@ -56,8 +57,12 @@ class _LanguageToggleButtonState extends State<LanguageToggleButton> {
                   lang['label']!,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    color: isSelected ? const Color(0xFFD4A373) : const Color(0xFF333333),
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    color: isSelected
+                        ? AppColors.primary
+                        : AppColors.textPrimary,
                   ),
                 ),
               ),
@@ -65,33 +70,38 @@ class _LanguageToggleButtonState extends State<LanguageToggleButton> {
               Icon(
                 Icons.check,
                 size: 16,
-                color: isSelected ? const Color(0xFFD4A373) : Colors.transparent,
+                color: isSelected ? AppColors.primary : Colors.transparent,
               ),
             ],
           ),
         );
       }).toList(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              _languages.firstWhere((l) => l['code'] == current)['flag']!,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              _languages.firstWhere((l) => l['code'] == current)['label']!,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: textColor,
+      child: SizedBox(
+        width: 104,
+        height: 40,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _languages.firstWhere((l) => l['code'] == current)['flag']!,
+                style: const TextStyle(fontSize: 16),
               ),
-            ),
-            const SizedBox(width: 2),
-            Icon(Icons.arrow_drop_down, size: 16, color: textColor),
-          ],
+              const SizedBox(width: 4),
+              Text(
+                _languages.firstWhere((l) => l['code'] == current)['label']!,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: textColor,
+                ),
+              ),
+              const SizedBox(width: 2),
+              Icon(Icons.arrow_drop_down, size: 16, color: textColor),
+            ],
+          ),
         ),
       ),
     );

@@ -6,6 +6,8 @@ import 'admin_screen.dart';
 import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/language_toggle_button.dart';
+import '../widgets/theme_toggle_button.dart';
+import '../utils/app_constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,28 +36,36 @@ class _LoginScreenState extends State<LoginScreen> {
     final l = AppLocalizations.of(context);
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFFEFAE0), Color(0xFFFAEDCD)],
+            colors: [AppColors.gradientStart, AppColors.gradientEnd],
           ),
         ),
         child: SafeArea(
           child: Stack(
             children: [
-              // Language toggle top-right
+              // Language toggle top-left and Theme toggle top-right
               Positioned(
-                top: 8,
-                right: 8,
+                top: 12,
+                left: 12,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4A373),
+                    color: AppColors.primary,
                     borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: const LanguageToggleButton(),
                 ),
               ),
+              Positioned(top: 12, right: 12, child: const ThemeToggleButton()),
               Center(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -66,19 +76,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.maps_home_work_rounded,
                           size: 80,
-                          color: Color(0xFFD4A373),
+                          color: AppColors.primary,
                         ),
                         const SizedBox(height: 24),
                         Text(
                           l.tr('welcomeBack'),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF333333),
+                            color: AppColors.textPrimary,
                             letterSpacing: 1.2,
                           ),
                         ),
@@ -86,9 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           l.tr('loginSubtitle'),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
-                            color: Colors.black54,
+                            color: AppColors.textSecondary,
                           ),
                         ),
                         const SizedBox(height: 48),
@@ -97,13 +107,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _emailController,
                           validator: (value) =>
                               value == null || !value.contains('@')
-                                  ? l.tr('pleaseEnterValidEmail')
-                                  : null,
+                              ? l.tr('pleaseEnterValidEmail')
+                              : null,
+                          style: TextStyle(color: AppColors.textPrimary),
                           decoration: InputDecoration(
                             hintText: l.tr('emailAddress'),
-                            prefixIcon: const Icon(Icons.email_outlined),
+                            hintStyle: TextStyle(
+                              color: AppColors.textSecondary.withValues(
+                                alpha: 0.6,
+                              ),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.email_outlined,
+                              color: AppColors.textSecondary,
+                            ),
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: AppColors.backgroundCard,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide.none,
@@ -119,26 +138,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Password
                         TextFormField(
                           controller: _passwordController,
-                          validator: (value) =>
-                              value == null || value.isEmpty
-                                  ? l.tr('pleaseEnterPassword')
-                                  : null,
+                          validator: (value) => value == null || value.isEmpty
+                              ? l.tr('pleaseEnterPassword')
+                              : null,
                           obscureText: _obscurePassword,
+                          style: TextStyle(color: AppColors.textPrimary),
                           decoration: InputDecoration(
                             hintText: l.tr('password'),
-                            prefixIcon: const Icon(Icons.lock_outline),
+                            hintStyle: TextStyle(
+                              color: AppColors.textSecondary.withValues(
+                                alpha: 0.6,
+                              ),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.lock_outline,
+                              color: AppColors.textSecondary,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword
                                     ? Icons.visibility_off_outlined
                                     : Icons.visibility_outlined,
+                                color: AppColors.textSecondary,
                               ),
                               onPressed: () => setState(
                                 () => _obscurePassword = !_obscurePassword,
                               ),
                             ),
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: AppColors.backgroundCard,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide.none,
@@ -174,37 +202,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                       }
                                       Navigator.pushReplacement(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (_) => dest,
-                                        ),
+                                        MaterialPageRoute(builder: (_) => dest),
                                       );
                                     } else {
                                       final msg =
                                           AuthService.lastErrorMessage ??
                                           l.tr('loginFailed');
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
                                           content: Text(msg),
                                           backgroundColor: Colors.red,
-                                          duration:
-                                              const Duration(seconds: 4),
+                                          duration: const Duration(seconds: 4),
                                         ),
                                       );
                                     }
                                   }
                                 },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFD4A373),
+                            backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
                             elevation: 4,
-                            shadowColor: const Color(
-                              0xFFD4A373,
-                            ).withValues(alpha: 0.5),
+                            shadowColor: AppColors.primary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           child: _isLoading
                               ? const SizedBox(
@@ -230,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Text(
                               l.tr('dontHaveAccount'),
-                              style: const TextStyle(color: Colors.black54),
+                              style: TextStyle(color: AppColors.textSecondary),
                             ),
                             TextButton(
                               onPressed: () => Navigator.push(
@@ -241,9 +267,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               child: Text(
                                 l.tr('register'),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFFD4A373),
+                                  color: AppColors.primary,
                                 ),
                               ),
                             ),

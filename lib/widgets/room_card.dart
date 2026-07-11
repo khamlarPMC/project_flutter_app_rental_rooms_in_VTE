@@ -7,6 +7,7 @@ import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/language_provider.dart';
 import '../utils/district_villages.dart';
+import '../utils/app_constants.dart';
 
 class RoomCard extends StatelessWidget {
   final Room room;
@@ -84,10 +85,10 @@ class RoomCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: Colors.grey.shade200,
-                            child: const Center(
+                            child: Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Color(0xFFD4A373),
+                                color: AppColors.primary,
                               ),
                             ),
                           ),
@@ -134,18 +135,18 @@ class RoomCard extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFAEDCD).withValues(alpha: 0.9),
+                        color: AppColors.secondary.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFFD4A373).withValues(alpha: 0.3),
+                          color: AppColors.primary.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
                         '\$${room.pricePerMonth.toStringAsFixed(0)}${l.tr('perMonth')}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFD4A373),
+                          color: AppColors.primary,
                         ),
                       ),
                     ),
@@ -161,21 +162,21 @@ class RoomCard extends StatelessWidget {
                 children: [
                   Text(
                     room.roomName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF333333),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 18, color: Colors.grey.shade600),
+                      Icon(Icons.location_on, size: 18, color: AppColors.textSecondary),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           locationText,
-                          style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
+                          style: TextStyle(fontSize: 15, color: AppColors.textSecondary),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -185,13 +186,13 @@ class RoomCard extends StatelessWidget {
                   if (room.owner != null)
                     Row(
                       children: [
-                        Icon(Icons.person, size: 18, color: Colors.grey.shade600),
+                        Icon(Icons.person, size: 18, color: AppColors.textSecondary),
                         const SizedBox(width: 4),
                         Text(
                           '${l.tr('owner')}: ${room.owner!.name}',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey.shade600,
+                            color: AppColors.textSecondary,
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -215,7 +216,7 @@ class RoomCard extends StatelessWidget {
                               : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isAvailable
-                                ? const Color(0xFFD4A373)
+                                ? AppColors.primary
                                 : Colors.grey,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/language_provider.dart';
 import '../utils/district_villages.dart';
+import '../utils/app_constants.dart';
 
 class HomeFilterBar extends StatelessWidget {
   final TextEditingController searchController;
@@ -34,7 +35,7 @@ class HomeFilterBar extends StatelessWidget {
       children: [
         // Search Box
         Container(
-          color: const Color(0xFFD4A373),
+          color: AppColors.primary,
           padding: const EdgeInsets.only(
             left: 16,
             right: 16,
@@ -44,11 +45,13 @@ class HomeFilterBar extends StatelessWidget {
           child: TextField(
             controller: searchController,
             onChanged: onSearchChanged,
+            style: TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
               hintText: l.tr('searchForRooms'),
-              prefixIcon: const Icon(Icons.search, color: Colors.grey),
+              hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.6)),
+              prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: AppColors.backgroundCard,
               contentPadding: const EdgeInsets.symmetric(vertical: 0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -59,7 +62,7 @@ class HomeFilterBar extends StatelessWidget {
         ),
         // District & Village Dropdowns
         Container(
-          color: const Color(0xFFD4A373),
+          color: AppColors.primary,
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           child: Row(
             children: [
@@ -68,23 +71,24 @@ class HomeFilterBar extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.backgroundCard,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String?>(
                       value: selectedDistrict,
+                      dropdownColor: AppColors.backgroundCard,
                       isExpanded: true,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.keyboard_arrow_down,
-                        color: Color(0xFFD4A373),
+                        color: AppColors.primary,
                       ),
                       items: [
                         DropdownMenuItem<String?>(
                           value: null,
                           child: Text(
                             l.tr('allDistricts'),
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 14, color: AppColors.textPrimary),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -93,7 +97,7 @@ class HomeFilterBar extends StatelessWidget {
                             value: district,
                             child: Text(
                               getDistrictDisplay(district, isLao),
-                              style: const TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 14, color: AppColors.textPrimary),
                               overflow: TextOverflow.ellipsis,
                             ),
                           );
@@ -110,24 +114,25 @@ class HomeFilterBar extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.backgroundCard,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String?>(
                       key: ValueKey('village_$selectedDistrict'),
                       value: selectedVillage,
+                      dropdownColor: AppColors.backgroundCard,
                       isExpanded: true,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.keyboard_arrow_down,
-                        color: Color(0xFFD4A373),
+                        color: AppColors.primary,
                       ),
                       items: [
                         DropdownMenuItem<String?>(
                           value: null,
                           child: Text(
                             l.tr('allVillages'),
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 14, color: AppColors.textPrimary),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -136,7 +141,7 @@ class HomeFilterBar extends StatelessWidget {
                             value: village,
                             child: Text(
                               getVillageDisplay(village, isLao),
-                              style: const TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 14, color: AppColors.textPrimary),
                               overflow: TextOverflow.ellipsis,
                             ),
                           );

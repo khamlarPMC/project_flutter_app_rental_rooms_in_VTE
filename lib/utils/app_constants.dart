@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../providers/theme_provider.dart';
 
 // ============================================================
 //  APP CONSTANTS
@@ -14,7 +15,10 @@ class AppApi {
   AppApi._(); // protect create a instance
 
   /// Host of the Laravel API based on platform
-  static const String _dartDefinedBaseUrl = String.fromEnvironment('BASE_URL', defaultValue: '');
+  static const String _dartDefinedBaseUrl = String.fromEnvironment(
+    'BASE_URL',
+    defaultValue: '',
+  );
 
   static String get host {
     if (_dartDefinedBaseUrl.isNotEmpty) {
@@ -52,38 +56,53 @@ class AppApi {
 }
 
 // ------------------------------------------------------------
-//  COLORS (Design System) — Warm Cozy Minimalist
+//  COLORS (Design System) — Warm Cozy Minimalist (Dynamic Light / Dark)
 // ------------------------------------------------------------
 class AppColors {
   AppColors._(); // prevent instantiation
 
+  static bool get isDark => ThemeProvider.instance.isDarkMode;
+
   // Primary Brand Color
-  static const Color primary = Color(0xFFD4A373);
-  static const Color secondary = Color(0xFFFAEDCD);
+  static Color get primary =>
+      isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5);
+  static Color get secondary =>
+      isDark ? const Color(0xFF312E81) : const Color(0xFFE0E7FF);
 
   // Background Colors
-  static const Color background = Color(0xFFFEFAE0);
-  static const Color backgroundCard = Colors.white;
-  static const Color backgroundLight = Color(0xFFFAEDCD);
-  static const Color backgroundField = Color(0xFFFFFBF0);
+  static Color get background =>
+      isDark ? const Color(0xFF181513) : const Color(0xFFFDFBF7);
+  static Color get backgroundCard =>
+      isDark ? const Color(0xFF231E1B) : Colors.white;
+  static Color get backgroundLight =>
+      isDark ? const Color(0xFF2C2521) : const Color(0xFFFAEDCD);
+  static Color get backgroundField =>
+      isDark ? const Color(0xFF2D2520) : const Color(0xFFFFFBF0);
 
   // Gradient Colors (used in Login / Register)
-  static const Color gradientStart = Color(0xFFFEFAE0);
-  static const Color gradientEnd = Color(0xFFFAEDCD);
+  static Color get gradientStart =>
+      isDark ? const Color(0xFF1D1917) : const Color(0xFFFDFBF7);
+  static Color get gradientEnd =>
+      isDark ? const Color(0xFF2C2521) : const Color(0xFFFAEDCD);
 
   // Text Colors
-  static const Color textDark = Color(0xFF1E293B);
-  static const Color textPrimary = Color(0xFF333333);
-  static const Color textSecondary = Color(0xFF64748B);
+  static Color get textDark =>
+      isDark ? const Color(0xFFF5EFE9) : const Color(0xFF1E293B);
+  static Color get textPrimary =>
+      isDark ? const Color(0xFFFFFDFB) : const Color(0xFF333333);
+  static Color get textSecondary =>
+      isDark ? const Color(0xFFA5978F) : const Color(0xFF64748B);
 
   // Border Colors
-  static const Color border = Color(0xFFE2E8F0);
-  static const Color borderLight = Color(0xFFF1F5F9);
+  static Color get border =>
+      isDark ? const Color(0xFF3D322C) : const Color(0xFFE2E8F0);
+  static Color get borderLight =>
+      isDark ? const Color(0xFF2E2622) : const Color(0xFFF1F5F9);
 
   // Status Colors
-  static const Color success = Colors.green;
-  static const Color error = Colors.red;
-  static const Color warning = Colors.orange;
+  static Color get success => Colors.green;
+  static Color get error => Colors.red;
+  static Color get warning => Colors.orange;
 }
 
 // ------------------------------------------------------------
@@ -102,7 +121,10 @@ class AppSpacing {
 
   /// General screen padding
   static const EdgeInsets screenPadding = EdgeInsets.all(24.0);
-  static const EdgeInsets screenPaddingH = EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0);
+  static const EdgeInsets screenPaddingH = EdgeInsets.symmetric(
+    horizontal: 20.0,
+    vertical: 24.0,
+  );
 
   /// Padding for Card
   static const EdgeInsets cardPadding = EdgeInsets.all(20.0);
@@ -154,20 +176,20 @@ class AppShadow {
   AppShadow._();
 
   static List<BoxShadow> get card => [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.04),
-          blurRadius: 12,
-          offset: const Offset(0, 4),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.04),
+      blurRadius: 12,
+      offset: const Offset(0, 4),
+    ),
+  ];
 
   static List<BoxShadow> get avatar => [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
-          blurRadius: 10,
-          offset: const Offset(0, 4),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.08),
+      blurRadius: 10,
+      offset: const Offset(0, 4),
+    ),
+  ];
 }
 
 // ------------------------------------------------------------
