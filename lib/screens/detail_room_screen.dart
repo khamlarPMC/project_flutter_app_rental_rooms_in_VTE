@@ -4,6 +4,7 @@ import '../models/room_model.dart';
 import 'book_room_screen.dart';
 import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/app_constants.dart';
 
 class DetailRoomScreen extends StatefulWidget {
   final Room room;
@@ -39,10 +40,10 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
         AuthService.currentUser?.roleId == 3;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(l.tr('roomDetails')),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -85,10 +86,10 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: Colors.grey.shade200,
-                            child: const Center(
+                            child: Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Color(0xFFD4A373),
+                                color: AppColors.primary,
                               ),
                             ),
                           ),
@@ -145,7 +146,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           height: 8,
                           decoration: BoxDecoration(
                             color: _currentImageIndex == index
-                                ? const Color(0xFFD4A373)
+                                ? AppColors.primary
                                 : Colors.white.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(4),
                             boxShadow: [
@@ -198,10 +199,10 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                       Expanded(
                         child: Text(
                           title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF333333),
+                            color: AppColors.textPrimary,
                           ),
                         ),
                       ),
@@ -211,20 +212,18 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFAEDCD),
+                          color: AppColors.secondary,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(
-                              0xFFD4A373,
-                            ).withValues(alpha: 0.3),
+                            color: AppColors.primary.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Text(
                           price,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFD4A373),
+                            color: AppColors.primary,
                           ),
                         ),
                       ),
@@ -237,14 +236,14 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                       Icon(
                         Icons.location_on,
                         size: 20,
-                        color: Colors.grey.shade600,
+                        color: AppColors.textSecondary,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         location,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.grey.shade700,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -255,16 +254,16 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFD4A373).withValues(alpha: 0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFD4A373).withValues(alpha: 0.3)),
+                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
                       ),
                       child: Row(
                         children: [
                           CircleAvatar(
                             radius: 22,
-                            backgroundColor: const Color(0xFFD4A373).withValues(alpha: 0.2),
-                            child: const Icon(Icons.person, color: Color(0xFFD4A373), size: 24),
+                            backgroundColor: AppColors.primary.withValues(alpha: 0.2),
+                            child: Icon(Icons.person, color: AppColors.primary, size: 24),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -273,33 +272,33 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                               children: [
                                 Text(
                                   room.owner!.name,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF333333),
+                                    color: AppColors.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 if (room.owner!.phone != null && room.owner!.phone!.isNotEmpty)
                                   Row(
                                     children: [
-                                      const Icon(Icons.phone, size: 14, color: Color(0xFFD4A373)),
+                                      Icon(Icons.phone, size: 14, color: AppColors.primary),
                                       const SizedBox(width: 4),
                                       Text(
                                         room.owner!.phone!,
-                                        style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                                        style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
                                       ),
                                     ],
                                   )
                                 else
                                   Text(
                                     l.tr('noPhoneNumber'),
-                                    style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                                    style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
                                   ),
                               ],
                             ),
                           ),
-                          const Icon(Icons.contact_phone_outlined, color: Color(0xFFD4A373), size: 22),
+                          Icon(Icons.contact_phone_outlined, color: AppColors.primary, size: 22),
                         ],
                       ),
                     ),
@@ -308,10 +307,10 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                   // Description
                   Text(
                     l.tr('description'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF333333),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -319,7 +318,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                     description,
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey.shade700,
+                      color: AppColors.textSecondary,
                       height: 1.5,
                     ),
                   ),
@@ -327,10 +326,10 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                   // Amenities
                   Text(
                     l.tr('amenities'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF333333),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -340,11 +339,11 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                     children: amenities
                         .map(
                           (amenity) => Chip(
-                            label: Text(amenity),
-                            backgroundColor: Colors.white,
+                            label: Text(amenity, style: TextStyle(color: AppColors.textPrimary)),
+                            backgroundColor: AppColors.backgroundCard,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
-                              side: BorderSide(color: Colors.grey.shade300),
+                              side: BorderSide(color: AppColors.border),
                             ),
                           ),
                         )
@@ -359,9 +358,9 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
       bottomNavigationBar: hideBookingButton
           ? null // Hide booking button for Owners and Admins
           : Container(
-              padding: const EdgeInsets.all(20),
+               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backgroundCard,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.05),
@@ -380,7 +379,7 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4A373),
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

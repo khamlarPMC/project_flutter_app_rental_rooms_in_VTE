@@ -6,6 +6,7 @@ import '../widgets/room_list_view.dart';
 import '../utils/district_villages.dart';
 import 'login_screen.dart';
 import 'detail_user_screen.dart';
+import '../utils/app_constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,10 +101,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('App Rental Room'),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [

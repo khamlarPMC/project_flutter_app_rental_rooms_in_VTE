@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'my_bookings_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/app_constants.dart';
 
 class UserMainScreen extends StatefulWidget {
   const UserMainScreen({super.key});
@@ -18,7 +19,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       body: _views[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -37,9 +38,9 @@ class _UserMainScreenState extends State<UserMainScreen> {
               _currentIndex = index;
             });
           },
-          backgroundColor: Colors.white,
-          selectedItemColor: const Color(0xFFD4A373),
-          unselectedItemColor: Colors.grey,
+          backgroundColor: AppColors.backgroundCard,
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.textSecondary,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
           items: [

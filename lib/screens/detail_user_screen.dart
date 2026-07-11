@@ -225,7 +225,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
                     ),
                     child: Text(
                       _roleName.toUpperCase(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: AppFontSize.sm,
@@ -374,7 +374,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const CircularProgressIndicator(
+                        CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
                             AppColors.primary,
                           ),
@@ -417,7 +417,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
               const SizedBox(width: AppSpacing.sm),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: AppFontSize.lg,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textDark,
@@ -425,8 +425,8 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
             child: Divider(color: AppColors.borderLight, height: 1),
           ),
           ...children,
@@ -490,7 +490,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: AppRadius.borderMd,
-              borderSide: const BorderSide(color: AppColors.border, width: 1),
+              borderSide: BorderSide(color: AppColors.border, width: 1),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: AppRadius.borderMd,
@@ -498,7 +498,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: AppRadius.borderMd,
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.primary,
                 width: 1.5,
               ),
@@ -524,7 +524,7 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
       children: [
         Text(
           l.tr('gender'),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: AppFontSize.sm,
             fontWeight: FontWeight.bold,
             color: AppColors.textSecondary,
@@ -543,12 +543,12 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
               fontSize: AppFontSize.md,
             ),
           ),
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_drop_down,
             color: AppColors.textSecondary,
           ),
           decoration: InputDecoration(
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.transgender,
               color: AppColors.textSecondary,
               size: 20,
@@ -561,15 +561,15 @@ class _DetailUserScreenState extends State<DetailUserScreen> {
             ),
             border: OutlineInputBorder(
               borderRadius: AppRadius.borderMd,
-              borderSide: const BorderSide(color: AppColors.border, width: 1),
+              borderSide: BorderSide(color: AppColors.border, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: AppRadius.borderMd,
-              borderSide: const BorderSide(color: AppColors.border, width: 1),
+              borderSide: BorderSide(color: AppColors.border, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: AppRadius.borderMd,
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.primary,
                 width: 1.5,
               ),
