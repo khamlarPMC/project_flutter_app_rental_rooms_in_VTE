@@ -1,6 +1,6 @@
 # app_rental_room
 
-A new Flutter project.
+project is runing
 
 ## Getting Started
 
