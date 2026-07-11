@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_rental_room/services/room_service.dart';
+import 'package:app_rental_room/utils/app_constants.dart';
 
 class BookingRequestCard extends StatefulWidget {
   final dynamic booking;
@@ -100,8 +101,18 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
     try {
       final dt = DateTime.parse(rawDate).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
     } catch (_) {
@@ -115,12 +126,16 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
     final tenant = booking['tenant'];
     final room = booking['room'];
     final bool isRoomDeleted = room == null;
-    final String rawStatus = (booking['booking_status'] as String).toLowerCase();
+    final String rawStatus = (booking['booking_status'] as String)
+        .toLowerCase();
 
     // Auto-detect expired: confirmed + move_out_date passed
     final String moveOutRaw = booking['move_out_date']?.toString() ?? '';
-    final DateTime? moveOutDate = moveOutRaw.isNotEmpty ? DateTime.tryParse(moveOutRaw) : null;
-    final bool isExpired = rawStatus == 'confirmed' &&
+    final DateTime? moveOutDate = moveOutRaw.isNotEmpty
+        ? DateTime.tryParse(moveOutRaw)
+        : null;
+    final bool isExpired =
+        rawStatus == 'confirmed' &&
         moveOutDate != null &&
         moveOutDate.isBefore(DateTime.now());
     final String status = isExpired ? 'expired' : rawStatus;
@@ -163,23 +178,34 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
     }
 
     // Room info
-    final String roomName = isRoomDeleted ? 'Room has been deleted' : (room['room_name'] ?? 'Unknown Room');
+    final String roomName = isRoomDeleted
+        ? 'Room has been deleted'
+        : (room['room_name'] ?? 'Unknown Room');
     final dynamic priceRaw = isRoomDeleted ? null : room['price_per_month'];
-    final String roomPrice = priceRaw != null ? '\$${double.tryParse(priceRaw.toString())?.toStringAsFixed(0) ?? priceRaw}' : 'N/A';
+    final String roomPrice = priceRaw != null
+        ? '\$${double.tryParse(priceRaw.toString())?.toStringAsFixed(0) ?? priceRaw}'
+        : 'N/A';
 
     // Address
     final address = isRoomDeleted ? null : room['address'];
     final String location = (address != null)
-        ? '${address['village'] ?? ''}, ${address['district'] ?? ''}'.replaceAll(RegExp(r'^,\s*|,\s*$'), '')
+        ? '${address['village'] ?? ''}, ${address['district'] ?? ''}'
+              .replaceAll(RegExp(r'^,\s*|,\s*$'), '')
         : '';
 
     // Dates
-    final String moveInDisplay = _formatDate(booking['move_in_date']?.toString());
-    final String moveOutDisplay = _formatDate(booking['move_out_date']?.toString());
+    final String moveInDisplay = _formatDate(
+      booking['move_in_date']?.toString(),
+    );
+    final String moveOutDisplay = _formatDate(
+      booking['move_out_date']?.toString(),
+    );
     final int totalMonths = booking['total_months'] ?? 0;
 
     // Price calculation
-    final double? price = priceRaw != null ? double.tryParse(priceRaw.toString()) : null;
+    final double? price = priceRaw != null
+        ? double.tryParse(priceRaw.toString())
+        : null;
     final String totalPrice = (price != null && totalMonths > 0)
         ? '\$${(price * totalMonths).toStringAsFixed(0)}'
         : 'N/A';
@@ -200,8 +226,8 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundColor: const Color(0xFFD4A373).withValues(alpha: 0.12),
-                  child: const Icon(Icons.person, color: Color(0xFFD4A373), size: 26),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.12),
+                  child: Icon(Icons.person, color: AppColors.primary, size: 26),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -209,11 +235,13 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        tenant != null ? tenant['name'] ?? 'Unknown' : 'Unknown User',
-                        style: const TextStyle(
+                        tenant != null
+                            ? tenant['name'] ?? 'Unknown'
+                            : 'Unknown User',
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E293B),
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -221,18 +249,26 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                         tenant != null ? tenant['email'] ?? '' : '',
                         style: TextStyle(
                           fontSize: 13,
-                          color: Colors.grey.shade600,
+                          color: AppColors.textSecondary,
                         ),
                       ),
-                      if (tenant?['phone'] != null && tenant!['phone'].toString().isNotEmpty) ...[
+                      if (tenant?['phone'] != null &&
+                          tenant!['phone'].toString().isNotEmpty) ...[
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            Icon(Icons.phone, size: 12, color: Colors.grey.shade500),
+                            Icon(
+                              Icons.phone,
+                              size: 12,
+                              color: AppColors.textSecondary,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               tenant['phone'],
-                              style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
                             ),
                           ],
                         ),
@@ -241,7 +277,10 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: statusBgColor,
                     borderRadius: BorderRadius.circular(20),
@@ -273,7 +312,10 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
             if (isRoomDeleted) ...[
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEE2E2),
                   borderRadius: BorderRadius.circular(10),
@@ -281,7 +323,11 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.delete_outline, size: 18, color: Color(0xFFDC2626)),
+                    const Icon(
+                      Icons.delete_outline,
+                      size: 18,
+                      color: Color(0xFFDC2626),
+                    ),
                     const SizedBox(width: 8),
                     const Text(
                       'This room has been removed from the system.',
@@ -301,10 +347,14 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: isRoomDeleted ? const Color(0xFFFFF7F7) : const Color(0xFFF8FAFF),
+                color: isRoomDeleted
+                    ? AppColors.error.withValues(alpha: 0.08)
+                    : AppColors.backgroundCard,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isRoomDeleted ? const Color(0xFFFCA5A5) : const Color(0xFFE2E8F0),
+                  color: isRoomDeleted
+                      ? AppColors.error.withValues(alpha: 0.4)
+                      : AppColors.border,
                 ),
               ),
               child: Column(
@@ -313,9 +363,13 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                   Row(
                     children: [
                       Icon(
-                        isRoomDeleted ? Icons.no_meeting_room_outlined : Icons.meeting_room_outlined,
+                        isRoomDeleted
+                            ? Icons.no_meeting_room_outlined
+                            : Icons.meeting_room_outlined,
                         size: 16,
-                        color: isRoomDeleted ? const Color(0xFFDC2626) : const Color(0xFFD4A373),
+                        color: isRoomDeleted
+                            ? AppColors.error
+                            : AppColors.primary,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -324,17 +378,21 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
-                            color: isRoomDeleted ? const Color(0xFFDC2626) : const Color(0xFF1E293B),
-                            fontStyle: isRoomDeleted ? FontStyle.italic : FontStyle.normal,
+                            color: isRoomDeleted
+                                ? AppColors.error
+                                : AppColors.textPrimary,
+                            fontStyle: isRoomDeleted
+                                ? FontStyle.italic
+                                : FontStyle.normal,
                           ),
                         ),
                       ),
                       if (!isRoomDeleted)
                         Text(
                           '$roomPrice / mo',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFD4A373),
+                            color: AppColors.primary,
                             fontSize: 14,
                           ),
                         ),
@@ -345,11 +403,18 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade500),
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 14,
+                          color: Colors.grey.shade500,
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           location,
-                          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
                       ],
                     ),
@@ -370,7 +435,11 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                           iconColor: Colors.green.shade600,
                         ),
                       ),
-                      Container(width: 1, height: 40, color: Colors.grey.shade200),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: Colors.grey.shade200,
+                      ),
                       Expanded(
                         child: _infoTile(
                           icon: Icons.logout,
@@ -393,17 +462,22 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                         child: _infoTile(
                           icon: Icons.timelapse,
                           label: 'Duration',
-                          value: '$totalMonths month${totalMonths != 1 ? 's' : ''}',
+                          value:
+                              '$totalMonths month${totalMonths != 1 ? 's' : ''}',
                           iconColor: Colors.orange.shade600,
                         ),
                       ),
-                      Container(width: 1, height: 40, color: Colors.grey.shade200),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: Colors.grey.shade200,
+                      ),
                       Expanded(
                         child: _infoTile(
                           icon: Icons.payments_outlined,
                           label: 'Total',
                           value: totalPrice,
-                          iconColor: const Color(0xFFD4A373),
+                          iconColor: AppColors.primary,
                         ),
                       ),
                     ],
@@ -498,10 +572,10 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
           const SizedBox(height: 2),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 13,
-              color: Color(0xFF1E293B),
+              color: AppColors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),

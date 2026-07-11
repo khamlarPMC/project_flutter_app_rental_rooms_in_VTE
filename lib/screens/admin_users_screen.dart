@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/admin_service.dart';
 import '../models/user_model.dart';
+import '../utils/app_constants.dart';
 import 'admin_user_detail_screen.dart';
 
 class AdminUsersScreen extends StatefulWidget {
@@ -31,22 +32,35 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   }
 
   Future<void> _deleteUser(int id) async {
-    bool confirm = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: const Text('Are you sure you want to delete this user?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
-        ],
-      ),
-    ) ?? false;
+    bool confirm =
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Confirm Delete'),
+            content: const Text('Are you sure you want to delete this user?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
 
     if (confirm) {
       final success = await _adminService.deleteUser(id);
       if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User deleted')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('User deleted')));
         _fetchUsers();
       }
     }
@@ -55,51 +69,75 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Manage Users'),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _users.isEmpty
-              ? const Center(child: Text('No users found'))
-              : ListView.builder(
-                  itemCount: _users.length,
-                  itemBuilder: (context, index) {
-                    final user = _users[index];
-                    String roleName = 'Unknown';
-                    if (user.roleId == 1) roleName = 'User';
-                    if (user.roleId == 2) roleName = 'Owner';
-                    if (user.roleId == 3) roleName = 'Admin';
+          ? Center(
+              child: Text(
+                'No users found',
+                style: TextStyle(color: AppColors.textPrimary),
+              ),
+            )
+          : ListView.builder(
+              itemCount: _users.length,
+              itemBuilder: (context, index) {
+                final user = _users[index];
+                String roleName = 'Unknown';
+                if (user.roleId == 1) roleName = 'User';
+                if (user.roleId == 2) roleName = 'Owner';
+                if (user.roleId == 3) roleName = 'Admin';
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: const Color(0xFFD4A373),
-                          child: Text(user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white)),
-                        ),
-                        title: Text(user.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('${user.email}\nRole: $roleName'),
-                        isThreeLine: true,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AdminUserDetailScreen(user: user),
-                            ),
-                          );
-                        },
-                        trailing: user.roleId != 3
-                            ? IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () => _deleteUser(user.userId!),
-                              )
-                            : null,
+                return Card(
+                  color: AppColors.backgroundCard,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: AppColors.primary,
+                      child: Text(
+                        user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                        style: const TextStyle(color: Colors.white),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                    title: Text(
+                      user.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${user.email}\nRole: $roleName',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
+                    isThreeLine: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AdminUserDetailScreen(user: user),
+                        ),
+                      );
+                    },
+                    trailing: user.roleId != 3
+                        ? IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _deleteUser(user.userId!),
+                          )
+                        : null,
+                  ),
+                );
+              },
+            ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:app_rental_room/widgets/owner_room_card.dart';
 import 'package:app_rental_room/screens/detail_user_screen.dart';
 import 'package:app_rental_room/screens/login_screen.dart';
 import 'package:app_rental_room/l10n/app_localizations.dart';
+import 'package:app_rental_room/utils/app_constants.dart';
 
 class MyRoomsView extends StatefulWidget {
   const MyRoomsView({super.key});
@@ -36,10 +37,10 @@ class _MyRoomsViewState extends State<MyRoomsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(context.tr('myRooms')),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -49,7 +50,8 @@ class _MyRoomsViewState extends State<MyRoomsView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const DetailUserScreen(initialRole: 'Owner'),
+                  builder: (context) =>
+                      const DetailUserScreen(initialRole: 'Owner'),
                 ),
               );
             },
@@ -76,51 +78,51 @@ class _MyRoomsViewState extends State<MyRoomsView> {
                 ),
               )
             : _rooms.isEmpty
-                ? SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.home_work_outlined,
-                            size: 80,
-                            color: Colors.grey.shade400,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            context.tr('noRoomsYet'),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            context.tr('addFirstRoom'),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black38,
-                            ),
-                          ),
-                        ],
+            ? SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.home_work_outlined,
+                        size: 80,
+                        color: AppColors.textSecondary,
                       ),
-                    ),
-                  )
-                : ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _rooms.length,
-                    itemBuilder: (context, index) {
-                      return OwnerRoomCard(
-                        room: _rooms[index],
-                        onRefresh: _fetchMyRooms,
-                      );
-                    },
+                      const SizedBox(height: 16),
+                      Text(
+                        context.tr('noRoomsYet'),
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        context.tr('addFirstRoom'),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+              )
+            : ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                itemCount: _rooms.length,
+                itemBuilder: (context, index) {
+                  return OwnerRoomCard(
+                    room: _rooms[index],
+                    onRefresh: _fetchMyRooms,
+                  );
+                },
+              ),
       ),
     );
   }

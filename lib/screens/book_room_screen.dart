@@ -5,6 +5,7 @@ import '../models/booking_model.dart';
 import '../services/room_service.dart';
 import '../services/booking_service.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/app_constants.dart';
 
 class BookRoomScreen extends StatefulWidget {
   final Room room;
@@ -102,10 +103,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
   Widget _buildDatePickerTheme(BuildContext context, Widget child) {
     return Theme(
       data: Theme.of(context).copyWith(
-        colorScheme: const ColorScheme.light(
-          primary: Color(0xFFD4A373),
-          onPrimary: Colors.white,
-          onSurface: Colors.black,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Theme.of(context).brightness,
         ),
       ),
       child: child,
@@ -119,10 +119,12 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
     final bool isEditMode = widget.booking != null;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(isEditMode ? context.tr('editBooking') : context.tr('bookThisRoom')),
-        backgroundColor: const Color(0xFFD4A373),
+        title: Text(
+          isEditMode ? context.tr('editBooking') : context.tr('bookThisRoom'),
+        ),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -156,14 +158,15 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                             widget.room.images != null &&
                                 widget.room.images!.isNotEmpty
                             ? CachedNetworkImage(
-                                imageUrl: widget.room.images!.first.fullImageUrl,
+                                imageUrl:
+                                    widget.room.images!.first.fullImageUrl,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey.shade200,
-                                  child: const Center(
+                                  child: Center(
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: Color(0xFFD4A373),
+                                      color: AppColors.primary,
                                     ),
                                   ),
                                 ),
@@ -186,18 +189,19 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                           children: [
                             Text(
                               roomName,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: AppColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               '\$$roomPrice / month',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFFD4A373),
+                                color: AppColors.primary,
                               ),
                             ),
                           ],
@@ -212,10 +216,10 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
               // Move-in Date
               Text(
                 context.tr('moveInDate'),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -233,7 +237,10 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.calendar_today, color: Colors.grey),
+                      Icon(
+                        Icons.calendar_today,
+                        color: AppColors.textSecondary,
+                      ),
                       const SizedBox(width: 12),
                       Text(
                         _selectedDate == null
@@ -242,8 +249,8 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           color: _selectedDate == null
-                              ? Colors.grey.shade600
-                              : Colors.black87,
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -255,10 +262,10 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
               // Move-out Date
               Text(
                 context.tr('moveOutDate'),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -276,9 +283,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today_outlined,
-                        color: Colors.grey,
+                        color: AppColors.textSecondary,
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -288,8 +295,8 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           color: _moveOutDate == null
-                              ? Colors.grey.shade600
-                              : Colors.black87,
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -301,10 +308,10 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
               // Duration
               Text(
                 context.tr('durationMonths'),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -313,9 +320,12 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                 readOnly: true,
                 decoration: InputDecoration(
                   hintText: context.tr('autoCalculated'),
-                  prefixIcon: const Icon(Icons.timer_outlined),
+                  prefixIcon: Icon(
+                    Icons.timer_outlined,
+                    color: AppColors.textSecondary,
+                  ),
                   filled: true,
-                  fillColor: Colors.grey.shade200,
+                  fillColor: AppColors.backgroundField,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -376,7 +386,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                                   content: Text(
                                     isEditMode
                                         ? context.tr('bookingUpdatedSuccess')
-                                        : context.tr('bookingRequestSentSuccess'),
+                                        : context.tr(
+                                            'bookingRequestSentSuccess',
+                                          ),
                                   ),
                                   backgroundColor: Colors.green,
                                 ),
@@ -398,13 +410,15 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                             _moveOutDate == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(context.tr('pleaseSelectBothDates')),
+                              content: Text(
+                                context.tr('pleaseSelectBothDates'),
+                              ),
                             ),
                           );
                         }
                       },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4A373),
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -415,7 +429,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                 child: _isSubmitting
                     ? const CircularProgressIndicator(color: Colors.white)
                     : Text(
-                        isEditMode ? context.tr('updateBookingBtn') : context.tr('confirmBookingBtn'),
+                        isEditMode
+                            ? context.tr('updateBookingBtn')
+                            : context.tr('confirmBookingBtn'),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

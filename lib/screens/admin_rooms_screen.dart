@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/admin_service.dart';
 import '../models/room_model.dart';
+import '../utils/app_constants.dart';
 import 'detail_room_screen.dart';
 
 class AdminRoomsScreen extends StatefulWidget {
@@ -201,19 +202,27 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Manage Rooms'),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _rooms.isEmpty
-          ? const Center(child: Text('No rooms found'))
+          ? Center(
+              child: Text(
+                'No rooms found',
+                style: TextStyle(color: AppColors.textPrimary),
+              ),
+            )
           : ListView.builder(
               itemCount: _rooms.length,
               itemBuilder: (context, index) {
                 final room = _rooms[index];
                 return Card(
+                  color: AppColors.backgroundCard,
                   margin: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
@@ -221,9 +230,9 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.meeting_room,
-                        color: Color(0xFFD4A373),
+                        color: AppColors.primary,
                         size: 40,
                       ),
                       title: Row(
@@ -231,8 +240,9 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                           Expanded(
                             child: Text(
                               room.roomName,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                color: AppColors.textPrimary,
                               ),
                             ),
                           ),
@@ -243,13 +253,13 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: room.isApproved
-                                  ? Colors.green.shade50
-                                  : Colors.orange.shade50,
+                                  ? AppColors.success.withValues(alpha: 0.12)
+                                  : AppColors.warning.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: room.isApproved
-                                    ? Colors.green.shade200
-                                    : Colors.orange.shade200,
+                                    ? AppColors.success.withValues(alpha: 0.3)
+                                    : AppColors.warning.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
@@ -258,8 +268,8 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                                 color: room.isApproved
-                                    ? Colors.green
-                                    : Colors.orange,
+                                    ? AppColors.success
+                                    : AppColors.warning,
                               ),
                             ),
                           ),
@@ -269,31 +279,37 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 4),
-                          Text('Owner: ${room.owner?.name ?? 'Unknown'}'),
+                          Text(
+                            'Owner: ${room.owner?.name ?? 'Unknown'}',
+                            style: TextStyle(color: AppColors.textPrimary),
+                          ),
                           Text(
                             'Price: \$${room.pricePerMonth.toStringAsFixed(2)} / month',
+                            style: TextStyle(color: AppColors.textSecondary),
                           ),
                           Row(
                             children: [
-                              const Text('Status: '),
+                              Text(
+                                'Status: ',
+                                style: TextStyle(color: AppColors.textPrimary),
+                              ),
                               Text(
                                 room.roomStatus,
                                 style: TextStyle(
                                   color:
                                       room.roomStatus.toLowerCase() ==
                                           'pending_deletion'
-                                      ? Colors.red
+                                      ? AppColors.error
                                       : room.roomStatus.toLowerCase() ==
                                             'available'
-                                      ? Colors.green
-                                      : Colors.orange,
+                                      ? AppColors.success
+                                      : AppColors.warning,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 8),
-                          // Pending deletion action buttons
                           if (room.roomStatus.toLowerCase() ==
                               'pending_deletion')
                             Row(
@@ -317,7 +333,7 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                                         ),
                                       ),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red,
+                                        backgroundColor: AppColors.error,
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,
                                         ),
@@ -343,9 +359,9 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                                         style: TextStyle(fontSize: 11),
                                       ),
                                       style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.orange,
-                                        side: const BorderSide(
-                                          color: Colors.orange,
+                                        foregroundColor: AppColors.warning,
+                                        side: BorderSide(
+                                          color: AppColors.warning,
                                         ),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,
@@ -361,7 +377,6 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                                 ),
                               ],
                             )
-                          // Approve room button (not yet approved)
                           else if (!room.isApproved)
                             SizedBox(
                               height: 32,
@@ -380,7 +395,7 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                                   ),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
+                                  backgroundColor: AppColors.success,
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                   ),
@@ -403,9 +418,9 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                       },
                       trailing:
                           room.roomStatus.toLowerCase() == 'pending_deletion'
-                          ? const Icon(Icons.hourglass_top, color: Colors.red)
+                          ? Icon(Icons.hourglass_top, color: AppColors.error)
                           : IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: Icon(Icons.delete, color: AppColors.error),
                               onPressed: () => _deleteRoom(room.roomId!),
                             ),
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/booking_model.dart';
+import '../utils/app_constants.dart';
 import 'package:intl/intl.dart';
 import 'detail_room_screen.dart';
 
@@ -15,63 +16,65 @@ class AdminBookingDetailScreen extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'confirmed': return const Color(0xFF16A34A);
-      case 'cancelled': return const Color(0xFFDC2626);
-      case 'expired':   return Colors.grey;
+      case 'confirmed':
+        return AppColors.success;
+      case 'cancelled':
+        return AppColors.error;
+      case 'expired':
+        return AppColors.textSecondary;
       case 'pending':
-      default:          return const Color(0xFFD97706);
+      default:
+        return AppColors.warning;
     }
   }
 
   Color _getStatusBg(String status) {
-    switch (status.toLowerCase()) {
-      case 'confirmed': return const Color(0xFFDCFCE7);
-      case 'cancelled': return const Color(0xFFFEE2E2);
-      case 'expired':   return const Color(0xFFF3F4F6);
-      default:          return const Color(0xFFFEF3C7);
-    }
+    return _getStatusColor(status).withValues(alpha: 0.12);
   }
 
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMM yyyy');
     final status = booking.bookingStatus.toLowerCase();
-    final double totalCost = (booking.room?.pricePerMonth ?? 0) * (booking.totalMonths ?? 0);
+    final double totalCost =
+        (booking.room?.pricePerMonth ?? 0) * (booking.totalMonths ?? 0);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Booking Details'),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_outline),
             tooltip: 'Delete Booking',
             onPressed: () async {
-              final confirm = await showDialog<bool>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text('Delete Booking'),
-                  content: const Text(
-                    'Are you sure you want to permanently delete this booking? This action cannot be undone.',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(ctx, false),
-                      child: const Text('Cancel'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(ctx, true),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
+              final confirm =
+                  await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Delete Booking'),
+                      content: const Text(
+                        'Are you sure you want to permanently delete this booking? This action cannot be undone.',
                       ),
-                      child: const Text('Delete'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Delete'),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ) ?? false;
+                  ) ??
+                  false;
 
               if (confirm && context.mounted) {
                 onDelete?.call();
@@ -93,11 +96,17 @@ class AdminBookingDetailScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: _getStatusBg(status),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _getStatusColor(status).withValues(alpha: 0.4)),
+                border: Border.all(
+                  color: _getStatusColor(status).withValues(alpha: 0.4),
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: _getStatusColor(status), size: 20),
+                  Icon(
+                    Icons.info_outline,
+                    color: _getStatusColor(status),
+                    size: 20,
+                  ),
                   const SizedBox(width: 10),
                   Text(
                     'Booking Status: ${booking.bookingStatus.toUpperCase()}',
@@ -119,7 +128,10 @@ class AdminBookingDetailScreen extends StatelessWidget {
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildDetailRow('Room Name', booking.room?.roomName ?? 'Deleted Room'),
+                  _buildDetailRow(
+                    'Room Name',
+                    booking.room?.roomName ?? 'Deleted Room',
+                  ),
                   _buildDetailRow(
                     'Price',
                     booking.room != null
@@ -143,7 +155,7 @@ class AdminBookingDetailScreen extends StatelessWidget {
                       icon: const Icon(Icons.photo_library_outlined, size: 18),
                       label: const Text('View Room Photos & Details'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD4A373),
+                        backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -153,19 +165,31 @@ class AdminBookingDetailScreen extends StatelessWidget {
                   ] else ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFEE2E2),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFFFCA5A5)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
                       ),
-                      child: const Row(
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.error.withValues(alpha: 0.4),
+                        ),
+                      ),
+                      child: Row(
                         children: [
-                          Icon(Icons.delete_outline, size: 16, color: Color(0xFFDC2626)),
-                          SizedBox(width: 8),
+                          Icon(
+                            Icons.delete_outline,
+                            size: 16,
+                            color: AppColors.error,
+                          ),
+                          const SizedBox(width: 8),
                           Text(
                             'This room has been removed from the system.',
-                            style: TextStyle(fontSize: 13, color: Color(0xFFDC2626)),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.error,
+                            ),
                           ),
                         ],
                       ),
@@ -184,7 +208,10 @@ class AdminBookingDetailScreen extends StatelessWidget {
                 children: [
                   _buildDetailRow('Name', booking.tenant?.name ?? 'Unknown'),
                   _buildDetailRow('Email', booking.tenant?.email ?? 'Unknown'),
-                  _buildDetailRow('Phone', booking.tenant?.phone ?? 'Not provided'),
+                  _buildDetailRow(
+                    'Phone',
+                    booking.tenant?.phone ?? 'Not provided',
+                  ),
                 ],
               ),
             ),
@@ -199,11 +226,19 @@ class AdminBookingDetailScreen extends StatelessWidget {
                   if (booking.bookingDate != null)
                     _buildDetailRow(
                       'Booking Date',
-                      DateFormat('dd MMM yyyy, HH:mm').format(booking.bookingDate!),
+                      DateFormat(
+                        'dd MMM yyyy, HH:mm',
+                      ).format(booking.bookingDate!),
                     ),
-                  _buildDetailRow('Move-in Date', dateFormat.format(booking.moveInDate)),
+                  _buildDetailRow(
+                    'Move-in Date',
+                    dateFormat.format(booking.moveInDate),
+                  ),
                   if (booking.moveOutDate != null)
-                    _buildDetailRow('Move-out Date', dateFormat.format(booking.moveOutDate!)),
+                    _buildDetailRow(
+                      'Move-out Date',
+                      dateFormat.format(booking.moveOutDate!),
+                    ),
                   _buildDetailRow(
                     'Duration',
                     '${booking.totalMonths ?? 0} month${(booking.totalMonths ?? 0) != 1 ? 's' : ''}',
@@ -211,7 +246,7 @@ class AdminBookingDetailScreen extends StatelessWidget {
                   _buildDetailRow(
                     'Total Cost',
                     '\$${totalCost.toStringAsFixed(0)}',
-                    valueColor: const Color(0xFFD4A373),
+                    valueColor: AppColors.primary,
                   ),
                 ],
               ),
@@ -223,29 +258,31 @@ class AdminBookingDetailScreen extends StatelessWidget {
               width: double.infinity,
               child: OutlinedButton.icon(
                 onPressed: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Delete Booking'),
-                      content: const Text(
-                        'Are you sure you want to permanently delete this booking? This action cannot be undone.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => Navigator.pop(ctx, true),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
+                  final confirm =
+                      await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text('Delete Booking'),
+                          content: const Text(
+                            'Are you sure you want to permanently delete this booking? This action cannot be undone.',
                           ),
-                          child: const Text('Delete'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx, false),
+                              child: const Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(ctx, true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Delete'),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ) ?? false;
+                      ) ??
+                      false;
 
                   if (confirm && context.mounted) {
                     onDelete?.call();
@@ -253,11 +290,16 @@ class AdminBookingDetailScreen extends StatelessWidget {
                   }
                 },
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
-                label: const Text('Delete This Booking', style: TextStyle(color: Colors.red)),
+                label: const Text(
+                  'Delete This Booking',
+                  style: TextStyle(color: Colors.red),
+                ),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.red),
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
             ),
@@ -274,6 +316,7 @@ class AdminBookingDetailScreen extends StatelessWidget {
     required Widget content,
   }) {
     return Card(
+      color: AppColors.backgroundCard,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -283,14 +326,14 @@ class AdminBookingDetailScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(icon, color: const Color(0xFFD4A373), size: 22),
+                Icon(icon, color: AppColors.primary, size: 22),
                 const SizedBox(width: 8),
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF333333),
+                    color: AppColors.textPrimary,
                   ),
                 ),
               ],
@@ -309,7 +352,10 @@ class AdminBookingDetailScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+          Text(
+            label,
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+          ),
           Expanded(
             child: Text(
               value,
@@ -317,7 +363,7 @@ class AdminBookingDetailScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: valueColor ?? Colors.black87,
+                color: valueColor ?? AppColors.textPrimary,
               ),
             ),
           ),

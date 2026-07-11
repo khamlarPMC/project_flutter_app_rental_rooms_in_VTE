@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../utils/app_constants.dart';
 
 class PhotoPickerWidget extends StatefulWidget {
   final List<XFile> initialImages;
@@ -98,10 +99,10 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
         child: Container(
           height: 200,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundCard,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFD4A373).withValues(alpha: 0.3),
+              color: AppColors.primary.withValues(alpha: 0.3),
               width: 2,
               style: BorderStyle.solid,
             ),
@@ -112,13 +113,13 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
               Icon(
                 Icons.add_a_photo_outlined,
                 size: 48,
-                color: const Color(0xFFD4A373).withValues(alpha: 0.5),
+                color: AppColors.primary.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 8),
               Text(
                 'Tap to add up to ${widget.maxImages} photos',
                 style: TextStyle(
-                  color: const Color(0xFFD4A373).withValues(alpha: 0.7),
+                  color: AppColors.primary.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -145,18 +146,18 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
                       width: 120,
                       margin: const EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.backgroundCard,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFFD4A373).withValues(alpha: 0.3),
+                          color: AppColors.primary.withValues(alpha: 0.3),
                           width: 2,
                           style: BorderStyle.solid,
                         ),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Icon(
                           Icons.add_a_photo,
-                          color: Color(0xFFD4A373),
+                          color: AppColors.primary,
                           size: 32,
                         ),
                       ),
@@ -186,7 +187,7 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
           const SizedBox(height: 8),
           Text(
             '$totalCount / ${widget.maxImages} photos selected',
-            style: const TextStyle(color: Colors.black54, fontSize: 14),
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
           ),
         ],
       );
@@ -209,7 +210,7 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
             margin: const EdgeInsets.only(right: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.grey.shade200,
+              color: AppColors.backgroundField,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -221,20 +222,20 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
                             width: 120,
                             height: 120,
                             placeholder: (context, url) => Container(
-                              color: Colors.grey.shade200,
-                              child: const Center(
+                              color: AppColors.backgroundField,
+                              child: Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Color(0xFFD4A373),
+                                  color: AppColors.primary,
                                 ),
                               ),
                             ),
                             errorWidget: (context, url, error) => Container(
-                              color: Colors.grey.shade200,
-                              child: const Center(
+                              color: AppColors.backgroundField,
+                              child: Center(
                                 child: Icon(
                                   Icons.broken_image,
-                                  color: Colors.grey,
+                                  color: AppColors.textSecondary,
                                   size: 36,
                                 ),
                               ),
@@ -243,10 +244,10 @@ class _PhotoPickerWidgetState extends State<PhotoPickerWidget> {
                         : Container(
                             width: 120,
                             height: 120,
-                            color: Colors.grey.shade200,
-                            child: const Icon(
+                            color: AppColors.backgroundField,
+                            child: Icon(
                               Icons.image_not_supported,
-                              color: Colors.grey,
+                              color: AppColors.textSecondary,
                               size: 36,
                             ),
                           ))

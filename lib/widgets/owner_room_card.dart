@@ -4,6 +4,7 @@ import '../models/room_model.dart';
 import '../screens/edit_room_screen.dart';
 import '../services/room_service.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/app_constants.dart';
 
 class OwnerRoomCard extends StatefulWidget {
   final Room room;
@@ -34,7 +35,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
             ),
             child: Text(l.tr('edit')),
@@ -70,7 +71,7 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
               ElevatedButton(
                 onPressed: () => Navigator.pop(ctx),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4A373),
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                 ),
                 child: Text(l.tr('ok')),
@@ -109,7 +110,9 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(AppLocalizations.of(context).tr('deletionRequestSent')),
+                content: Text(
+                  AppLocalizations.of(context).tr('deletionRequestSent'),
+                ),
                 backgroundColor: Colors.orange,
                 duration: const Duration(seconds: 4),
               ),
@@ -186,11 +189,11 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         imageUrl: room.images![idx].fullImageUrl,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
-                          color: Colors.grey.shade200,
-                          child: const Center(
+                          color: AppColors.backgroundField,
+                          child: Center(
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Color(0xFFD4A373),
+                              color: AppColors.primary,
                             ),
                           ),
                         ),
@@ -332,7 +335,9 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         ),
                       ),
                       child: Text(
-                        isAvailable ? context.tr('available') : context.tr('occupied'),
+                        isAvailable
+                            ? context.tr('available')
+                            : context.tr('occupied'),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -457,7 +462,9 @@ class _OwnerRoomCardState extends State<OwnerRoomCard> {
                         color: Colors.red,
                       ),
                       label: Text(
-                        isPendingDeletion ? context.tr('pendingDots') : context.tr('delete'),
+                        isPendingDeletion
+                            ? context.tr('pendingDots')
+                            : context.tr('delete'),
                         style: const TextStyle(color: Colors.red),
                       ),
                     ),

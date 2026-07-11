@@ -4,6 +4,7 @@ import 'package:app_rental_room/screens/add_listing_screen.dart';
 import 'package:app_rental_room/screens/owner/views/my_rooms_view.dart';
 import 'package:app_rental_room/screens/owner/views/bookings_view.dart';
 import 'package:app_rental_room/l10n/app_localizations.dart';
+import '../utils/app_constants.dart';
 
 class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
@@ -33,7 +34,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       body: currentView,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -52,14 +53,23 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               _currentIndex = index;
             });
           },
-          backgroundColor: Colors.white,
-          selectedItemColor: const Color(0xFFD4A373),
-          unselectedItemColor: Colors.grey,
+          backgroundColor: AppColors.backgroundCard,
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.textSecondary,
           showUnselectedLabels: true,
           items: [
-            BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('home')),
-            BottomNavigationBarItem(icon: const Icon(Icons.home_work), label: context.tr('myRooms')),
-            BottomNavigationBarItem(icon: const Icon(Icons.book_online), label: context.tr('bookings')),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.home),
+              label: context.tr('home'),
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.home_work),
+              label: context.tr('myRooms'),
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.book_online),
+              label: context.tr('bookings'),
+            ),
           ],
         ),
       ),
@@ -77,7 +87,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                   setState(() {}); // Re-build to refresh MyRoomsView
                 }
               },
-              backgroundColor: const Color(0xFFD4A373),
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.add),
               label: Text(context.tr('addRoom')),
