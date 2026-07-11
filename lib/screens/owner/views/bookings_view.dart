@@ -4,6 +4,7 @@ import 'package:app_rental_room/screens/detail_user_screen.dart';
 import 'package:app_rental_room/screens/login_screen.dart';
 import 'package:app_rental_room/services/room_service.dart';
 import 'package:app_rental_room/l10n/app_localizations.dart';
+import 'package:app_rental_room/utils/app_constants.dart';
 
 class BookingsView extends StatefulWidget {
   const BookingsView({super.key});
@@ -35,10 +36,10 @@ class _BookingsViewState extends State<BookingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(context.tr('bookings')),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -48,7 +49,8 @@ class _BookingsViewState extends State<BookingsView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const DetailUserScreen(initialRole: 'Owner'),
+                  builder: (context) =>
+                      const DetailUserScreen(initialRole: 'Owner'),
                 ),
               );
             },
@@ -69,18 +71,18 @@ class _BookingsViewState extends State<BookingsView> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _bookings.isEmpty
-                ? Center(child: Text(context.tr('noBookingRequestsFound')))
-                : ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _bookings.length,
-                    itemBuilder: (context, index) {
-                      return BookingRequestCard(
-                        booking: _bookings[index],
-                        onRefresh: _fetchBookings,
-                      );
-                    },
-                  ),
+            ? Center(child: Text(context.tr('noBookingRequestsFound')))
+            : ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                itemCount: _bookings.length,
+                itemBuilder: (context, index) {
+                  return BookingRequestCard(
+                    booking: _bookings[index],
+                    onRefresh: _fetchBookings,
+                  );
+                },
+              ),
       ),
     );
   }

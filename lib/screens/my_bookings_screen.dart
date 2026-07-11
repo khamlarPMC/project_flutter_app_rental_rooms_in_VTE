@@ -4,6 +4,7 @@ import '../services/booking_service.dart';
 import 'package:intl/intl.dart';
 import 'book_room_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/app_constants.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});
@@ -67,7 +68,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         if (result['success'] == true) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(AppLocalizations.of(context).tr('bookingSuccess'))),
+              SnackBar(
+                content: Text(
+                  AppLocalizations.of(context).tr('bookingSuccess'),
+                ),
+              ),
             );
           }
           _fetchBookings();
@@ -141,9 +146,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(context.tr('myBookings')),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -169,11 +175,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.event_busy, size: 80, color: Colors.grey.shade400),
+          Icon(Icons.event_busy, size: 80, color: AppColors.textSecondary),
           const SizedBox(height: 16),
           Text(
             context.tr('noBookingsYetMsg'),
-            style: const TextStyle(fontSize: 18, color: Colors.grey),
+            style: TextStyle(fontSize: 18, color: AppColors.textPrimary),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -181,7 +187,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
             icon: const Icon(Icons.refresh),
             label: Text(context.tr('refresh')),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFD4A373),
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
             ),
           ),
@@ -219,27 +225,43 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: const Color(0xFFD4A373).withValues(alpha: 0.15),
-                  child: const Icon(Icons.receipt_long, color: Color(0xFFD4A373), size: 20),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.15),
+                  child: Icon(
+                    Icons.receipt_long,
+                    color: AppColors.primary,
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Booking #${booking.bookingId ?? ''}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(resolvedStatus).withValues(alpha: 0.1),
+                    color: _getStatusColor(
+                      resolvedStatus,
+                    ).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: _getStatusColor(resolvedStatus)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(_getStatusIcon(resolvedStatus), size: 13, color: _getStatusColor(resolvedStatus)),
+                      Icon(
+                        _getStatusIcon(resolvedStatus),
+                        size: 13,
+                        color: _getStatusColor(resolvedStatus),
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         _getStatusLabel(resolvedStatus),
@@ -265,7 +287,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                 if (isRoomDeleted) ...[
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEE2E2),
                       borderRadius: BorderRadius.circular(8),
@@ -273,7 +298,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.delete_outline, size: 16, color: Color(0xFFDC2626)),
+                        const Icon(
+                          Icons.delete_outline,
+                          size: 16,
+                          color: Color(0xFFDC2626),
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           context.tr('roomRemovedMsg'),
@@ -296,19 +325,30 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                       child: Row(
                         children: [
                           Icon(
-                            isRoomDeleted ? Icons.no_meeting_room_outlined : Icons.home,
+                            isRoomDeleted
+                                ? Icons.no_meeting_room_outlined
+                                : Icons.home,
                             size: 20,
-                            color: isRoomDeleted ? const Color(0xFFDC2626) : Colors.grey.shade600,
+                            color: isRoomDeleted
+                                ? const Color(0xFFDC2626)
+                                : Colors.grey.shade600,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              isRoomDeleted ? context.tr('roomHasBeenDeleted') : (booking.room?.roomName ?? 'Room #${booking.roomId}'),
+                              isRoomDeleted
+                                  ? context.tr('roomHasBeenDeleted')
+                                  : (booking.room?.roomName ??
+                                        'Room #${booking.roomId}'),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
-                                color: isRoomDeleted ? const Color(0xFFDC2626) : null,
-                                fontStyle: isRoomDeleted ? FontStyle.italic : FontStyle.normal,
+                                color: isRoomDeleted
+                                    ? const Color(0xFFDC2626)
+                                    : null,
+                                fontStyle: isRoomDeleted
+                                    ? FontStyle.italic
+                                    : FontStyle.normal,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -319,10 +359,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                     if (!isRoomDeleted)
                       Text(
                         '\$${booking.room?.pricePerMonth.toStringAsFixed(0) ?? '0'}/mo',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
-                          color: Color(0xFFD4A373),
+                          color: AppColors.primary,
                         ),
                       ),
                   ],
@@ -503,7 +543,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                               ),
                             ),
                           ),

@@ -6,6 +6,7 @@ import '../models/address_model.dart';
 import '../models/amenity_model.dart';
 import '../services/room_service.dart';
 import '../utils/district_villages.dart';
+import '../utils/app_constants.dart';
 import '../providers/language_provider.dart';
 import '../l10n/app_localizations.dart';
 
@@ -122,17 +123,19 @@ class _AddListingScreenState extends State<AddListingScreen> {
     if (!districtVillages.containsKey(_selectedDistrict)) {
       _selectedDistrict = districtVillages.keys.first;
       _selectedVillage = districtVillages[_selectedDistrict]!.first;
-    } else if (!districtVillages[_selectedDistrict]!.contains(_selectedVillage)) {
+    } else if (!districtVillages[_selectedDistrict]!.contains(
+      _selectedVillage,
+    )) {
       _selectedVillage = districtVillages[_selectedDistrict]!.first;
     }
 
     final isLao = LanguageProvider.instance.isLao;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFAE0),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(context.tr('addNewRoom')),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -160,10 +163,10 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     // Title Field
                     Text(
                       context.tr('roomName'),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF333333),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -251,14 +254,18 @@ class _AddListingScreenState extends State<AddListingScreen> {
                             items: districtVillages.keys.map((String district) {
                               return DropdownMenuItem<String>(
                                 value: district,
-                                child: Text(getDistrictDisplay(district, isLao), overflow: TextOverflow.ellipsis),
+                                child: Text(
+                                  getDistrictDisplay(district, isLao),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
                               if (newValue != null) {
                                 setState(() {
                                   _selectedDistrict = newValue;
-                                  _selectedVillage = districtVillages[newValue]!.first;
+                                  _selectedVillage =
+                                      districtVillages[newValue]!.first;
                                 });
                               }
                             },
@@ -267,7 +274,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: DropdownButtonFormField<String>(
-                            key: ValueKey('village_dropdown_$_selectedDistrict'),
+                            key: ValueKey(
+                              'village_dropdown_$_selectedDistrict',
+                            ),
                             isExpanded: true,
                             value: _selectedVillage,
                             decoration: InputDecoration(
@@ -281,10 +290,15 @@ class _AddListingScreenState extends State<AddListingScreen> {
                                 horizontal: 16,
                               ),
                             ),
-                            items: districtVillages[_selectedDistrict]!.map((String village) {
+                            items: districtVillages[_selectedDistrict]!.map((
+                              String village,
+                            ) {
                               return DropdownMenuItem<String>(
                                 value: village,
-                                child: Text(getVillageDisplay(village, isLao), overflow: TextOverflow.ellipsis),
+                                child: Text(
+                                  getVillageDisplay(village, isLao),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -395,12 +409,11 @@ class _AddListingScreenState extends State<AddListingScreen> {
                                               _selectedAmenityIds.remove(id);
                                             });
                                           },
-                                          deleteIconColor: Colors.red.shade400,
-                                          backgroundColor: const Color(
-                                            0xFFD4A373,
-                                          ).withValues(alpha: 0.1),
-                                          labelStyle: const TextStyle(
-                                            color: Color(0xFFD4A373),
+                                          deleteIconColor: AppColors.error,
+                                          backgroundColor: AppColors.primary
+                                              .withValues(alpha: 0.1),
+                                          labelStyle: TextStyle(
+                                            color: AppColors.primary,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         );

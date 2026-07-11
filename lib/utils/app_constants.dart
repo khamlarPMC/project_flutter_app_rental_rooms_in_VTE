@@ -56,7 +56,7 @@ class AppApi {
 }
 
 // ------------------------------------------------------------
-//  COLORS (Design System) — Warm Cozy Minimalist (Dynamic Light / Dark)
+//  COLORS (Design System) — Neutral Indigio Theme (Dynamic Light / Dark)
 // ------------------------------------------------------------
 class AppColors {
   AppColors._(); // prevent instantiation
@@ -71,33 +71,33 @@ class AppColors {
 
   // Background Colors
   static Color get background =>
-      isDark ? const Color(0xFF181513) : const Color(0xFFFDFBF7);
+      isDark ? const Color(0xFF111827) : const Color(0xFFF8FAFC);
   static Color get backgroundCard =>
-      isDark ? const Color(0xFF231E1B) : Colors.white;
+      isDark ? const Color(0xFF1F2937) : Colors.white;
   static Color get backgroundLight =>
-      isDark ? const Color(0xFF2C2521) : const Color(0xFFFAEDCD);
+      isDark ? const Color(0xFF172133) : const Color(0xFFEFF4FF);
   static Color get backgroundField =>
-      isDark ? const Color(0xFF2D2520) : const Color(0xFFFFFBF0);
+      isDark ? const Color(0xFF243041) : const Color(0xFFF8FAFC);
 
   // Gradient Colors (used in Login / Register)
   static Color get gradientStart =>
-      isDark ? const Color(0xFF1D1917) : const Color(0xFFFDFBF7);
+      isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC);
   static Color get gradientEnd =>
-      isDark ? const Color(0xFF2C2521) : const Color(0xFFFAEDCD);
+      isDark ? const Color(0xFF1E293B) : const Color(0xFFE0E7FF);
 
   // Text Colors
   static Color get textDark =>
-      isDark ? const Color(0xFFF5EFE9) : const Color(0xFF1E293B);
+      isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A);
   static Color get textPrimary =>
-      isDark ? const Color(0xFFFFFDFB) : const Color(0xFF333333);
+      isDark ? const Color(0xFFF9FAFB) : const Color(0xFF0F172A);
   static Color get textSecondary =>
-      isDark ? const Color(0xFFA5978F) : const Color(0xFF64748B);
+      isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
 
   // Border Colors
   static Color get border =>
-      isDark ? const Color(0xFF3D322C) : const Color(0xFFE2E8F0);
+      isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0);
   static Color get borderLight =>
-      isDark ? const Color(0xFF2E2622) : const Color(0xFFF1F5F9);
+      isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9);
 
   // Status Colors
   static Color get success => Colors.green;

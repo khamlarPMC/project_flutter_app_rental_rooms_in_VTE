@@ -6,11 +6,17 @@ import 'admin_reports_screen.dart';
 import 'login_screen.dart';
 import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/app_constants.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
 
-  Widget _buildDashboardCard(BuildContext context, String title, IconData icon, Widget screen) {
+  Widget _buildDashboardCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Widget screen,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -27,17 +33,17 @@ class AdminScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 48, color: const Color(0xFFD4A373)),
+              Icon(icon, size: 48, color: AppColors.primary),
               const SizedBox(height: 12),
               Text(
                 title,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -53,7 +59,7 @@ class AdminScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l.tr('adminDashboard')),
-        backgroundColor: const Color(0xFFD4A373),
+        backgroundColor: AppColors.primary,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -71,11 +77,11 @@ class AdminScreen extends StatelessWidget {
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFFEFAE0), Color(0xFFFAEDCD)],
+            colors: [AppColors.gradientStart, AppColors.gradientEnd],
           ),
         ),
         child: Column(
@@ -84,10 +90,10 @@ class AdminScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 24.0),
               child: Text(
                 l.tr('welcomeAdmin'),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
+                  color: AppColors.textPrimary,
                 ),
               ),
             ),
@@ -97,10 +103,30 @@ class AdminScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 children: [
-                  _buildDashboardCard(context, l.tr('manageUsers'), Icons.people, const AdminUsersScreen()),
-                  _buildDashboardCard(context, l.tr('manageRooms'), Icons.meeting_room, const AdminRoomsScreen()),
-                  _buildDashboardCard(context, l.tr('manageBookings'), Icons.book_online, const AdminBookingsScreen()),
-                  _buildDashboardCard(context, l.tr('reports'), Icons.bar_chart, const AdminReportsScreen()),
+                  _buildDashboardCard(
+                    context,
+                    l.tr('manageUsers'),
+                    Icons.people,
+                    const AdminUsersScreen(),
+                  ),
+                  _buildDashboardCard(
+                    context,
+                    l.tr('manageRooms'),
+                    Icons.meeting_room,
+                    const AdminRoomsScreen(),
+                  ),
+                  _buildDashboardCard(
+                    context,
+                    l.tr('manageBookings'),
+                    Icons.book_online,
+                    const AdminBookingsScreen(),
+                  ),
+                  _buildDashboardCard(
+                    context,
+                    l.tr('reports'),
+                    Icons.bar_chart,
+                    const AdminReportsScreen(),
+                  ),
                 ],
               ),
             ),
