@@ -22,6 +22,8 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
   final RoomService _roomService = RoomService();
   final BookingService _bookingService = BookingService();
   bool _isSubmitting = false;
+  bool _hasExistingBooking = false;
+  bool _isLoadingBookings = true;
 
   DateTime? _selectedDate; // Move-in
   DateTime? _moveOutDate;
@@ -35,7 +37,31 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
       _selectedDate = widget.booking!.moveInDate;
       _moveOutDate = widget.booking!.moveOutDate;
       _durationController.text = widget.booking!.totalMonths.toString();
-      // Message is not currently in the model, but we could add it if needed
+      _isLoadingBookings = false;
+    } else {
+      _checkExistingBookings();
+    }
+  }
+
+  Future<void> _checkExistingBookings() async {
+    try {
+      final bookings = await _bookingService.getUserBookings();
+      final hasDuplicate = bookings.any((b) =>
+          b.roomId == widget.room.roomId &&
+          (b.bookingStatus.toLowerCase() == 'pending' ||
+              b.bookingStatus.toLowerCase() == 'confirmed'));
+      if (mounted) {
+        setState(() {
+          _hasExistingBooking = hasDuplicate;
+          _isLoadingBookings = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingBookings = false;
+        });
+      }
     }
   }
 
@@ -128,7 +154,9 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
         foregroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
+      body: _isLoadingBookings
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         physics: const BouncingScrollPhysics(),
         child: Form(
@@ -212,6 +240,33 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
                 ),
               ),
               const SizedBox(height: 24),
+              if (_hasExistingBooking) ...[
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.amber.shade400),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 28),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          context.tr('bookingPendingOrConfirmed'),
+                          style: TextStyle(
+                            color: Colors.amber.shade900,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
 
               // Move-in Date
               Text(
@@ -345,7 +400,7 @@ class _BookRoomScreenState extends State<BookRoomScreen> {
 
               // Submit Button
               ElevatedButton(
-                onPressed: _isSubmitting
+                onPressed: _isSubmitting || _hasExistingBooking
                     ? null
                     : () async {
                         if (_formKey.currentState!.validate() &&

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/room_model.dart';
 import 'book_room_screen.dart';
 import '../services/auth_service.dart';
+import '../services/booking_service.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/app_constants.dart';
 
@@ -17,6 +18,41 @@ class DetailRoomScreen extends StatefulWidget {
 
 class _DetailRoomScreenState extends State<DetailRoomScreen> {
   int _currentImageIndex = 0;
+  bool _hasExistingBooking = false;
+  bool _isLoadingBookings = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Only check if user is not Owner and Admin
+    final bool hideBookingButton =
+        AuthService.currentUser?.roleId == 2 ||
+        AuthService.currentUser?.roleId == 3;
+    if (!hideBookingButton) {
+      _checkExistingBookings();
+    }
+  }
+
+  Future<void> _checkExistingBookings() async {
+    setState(() => _isLoadingBookings = true);
+    try {
+      final bookings = await BookingService().getUserBookings();
+      final hasDuplicate = bookings.any((b) =>
+          b.roomId == widget.room.roomId &&
+          (b.bookingStatus.toLowerCase() == 'pending' ||
+              b.bookingStatus.toLowerCase() == 'confirmed'));
+      if (mounted) {
+        setState(() {
+          _hasExistingBooking = hasDuplicate;
+          _isLoadingBookings = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoadingBookings = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -370,26 +406,42 @@ class _DetailRoomScreenState extends State<DetailRoomScreen> {
                 ],
               ),
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BookRoomScreen(room: widget.room),
-                    ),
-                  );
-                },
+                onPressed: _isLoadingBookings || _hasExistingBooking
+                    ? null
+                    : () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookRoomScreen(room: widget.room),
+                          ),
+                        );
+                        if (result == true) {
+                          _checkExistingBookings();
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: _hasExistingBooking ? Colors.grey : AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: Text(
-                  l.tr('bookThisRoom'),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                child: _isLoadingBookings
+                    ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        _hasExistingBooking
+                            ? l.tr('alreadyBooked')
+                            : l.tr('bookThisRoom'),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
               ),
             ),
     );

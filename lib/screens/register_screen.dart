@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'owner_dashboard_screen.dart';
+import 'login_screen.dart';
 import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/language_toggle_button.dart';
@@ -368,24 +367,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     );
                                     if (!mounted) return;
                                     if (user != null) {
-                                      if (_selectedRole == 'Owner') {
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                const OwnerDashboardScreen(),
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            l.tr('registrationSuccess'),
                                           ),
-                                          (r) => false,
-                                        );
-                                      } else {
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => const HomeScreen(),
-                                          ),
-                                          (r) => false,
-                                        );
-                                      }
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const LoginScreen(),
+                                        ),
+                                        (r) => false,
+                                      );
                                     } else {
                                       setState(() => _isLoading = false);
                                       ScaffoldMessenger.of(
