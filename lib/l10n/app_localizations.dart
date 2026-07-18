@@ -52,6 +52,9 @@ class AppLocalizations {
       'registrationFailed':
           'Registration failed. Email might be in use or server error.',
       'pleaseSelectRole': 'Please select a role',
+      'registrationSuccess': 'Registration successful! Please log in.',
+      'alreadyBooked': 'Already Booked',
+      'bookingPendingOrConfirmed': 'You already have a pending or active booking for this room.',
       // Home
       'availableRooms': 'Available Rooms',
       'searchHint': 'Search rooms by name or location...',
@@ -284,6 +287,9 @@ class AppLocalizations {
       'registrationFailed':
           'ການລົງທະບຽນລົ້ມເຫຼວ. ອີເມວອາດຈະຖືກໃຊ້ແລ້ວ ຫຼື ເກີດຂໍ້ຜິດພາດ.',
       'pleaseSelectRole': 'ກະລຸນາເລືອກບົດບາດ',
+      'registrationSuccess': 'ລົງທະບຽນສໍາເລັດແລ້ວ! ກະລຸນາເຂົ້າສູ່ລະບົບ.',
+      'alreadyBooked': 'ຈອງແລ້ວ/ລໍຖ້າອະນຸມັດ',
+      'bookingPendingOrConfirmed': 'ທ່ານມີການຈອງທີ່ກຳລັງລໍຖ້າ ຫຼື ຢືນຢັນແລ້ວ ສຳລັບຫ້ອງນີ້.',
       // Home
       'availableRooms': 'ຫ້ອງທີ່ໃຫ້ເຊົ່າ',
       'searchHint': 'ຄົ້ນຫາຕາມຊື່ ຫຼື ສະຖານທີ່...',
